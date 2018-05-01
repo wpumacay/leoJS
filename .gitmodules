@@ -1,0 +1,3 @@
+[submodule "ext/cat1js"]
+	path = ext/cat1js
+	url = https://github.com/wpumacay/cat1js.git
