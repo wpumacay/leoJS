@@ -1,37 +1,30 @@
-<!DOCTYPE html>
 <html>
-
     <head>
-        <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
-        <title>Babylon - learning</title>
-        <script src="lib/babylon.2.5.js"></script>
-        <script src="src/Game.js"></script>
-        <script src="src/RRobot.js"></script>
-        <script src="src/RRobotURDFData.js"></script>
+
+        <title>cat1js</title>
+
+        <link rel="stylesheet" type="text/css" href="extjs/datgui/build/dat.gui.css">
+
         <style>
-            
-            html, body {
-                overflow: hidden;
-                width   : 100%;
-                height  : 100%;
-                margin  : 0;
-                padding : 0;
+            body 
+            {
+                margin: 0;
+                padding: 0;
+                background-color: #000000;
             }
+        </style>    
 
-            #renderCanvas {
-                width   : 100%;
-                height  : 100%;
-                touch-action : none;
-
-            }
-
-        </style>
+        <!-- Include libs -->
+        <script type = "text/javascript" src = "extjs/datgui/build/dat.gui.js"></script>
+        <script type = "text/javascript" src = "ext/cat1js/LCommon.js"></script>
+        <script type = "text/javascript" src = "ext/cat1js/LAssets.js"></script>
+        <script type = "text/javascript" src = "RAssets.js"></script>
+        <script type = "text/javascript" src = "RBoot.js"></script>
+        <script type = "text/javascript" src = "REntryPoint.js"></script>
+        
     </head>
-
     <body>
-        <canvas id="renderCanvas"></canvas>
+        <canvas id="glCanvas" style="width: 100vw; height: 100vh"></canvas>
+        <script type = "text/javascript">leojs.REntryPoint.begin();</script>    
     </body>
-
 </html>
-
-
