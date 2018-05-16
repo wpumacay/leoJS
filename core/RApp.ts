@@ -70,6 +70,24 @@ namespace leojs
 
             this.m_testEntity = new RTestEntity();
             this.m_world.addEntity( this.m_testEntity );
+
+            let q : number;
+
+            // for ( q = 0; q < 10; q++ )
+            // {
+
+            //     let _tEntity : RTestEntity = new RTestEntity();
+
+            //     _tEntity.position.x = ( Math.random() - 0.5 ) * 10.0;
+            //     _tEntity.position.y = ( Math.random() - 0.5 ) * 10.0;
+            //     _tEntity.position.z = ( Math.random() - 0.5 ) * 10.0;
+
+            //     _tEntity.rotation.x = ( Math.random() - 0.5 ) * Math.PI;
+            //     _tEntity.rotation.y = ( Math.random() - 0.5 ) * Math.PI;
+            //     _tEntity.rotation.z = ( Math.random() - 0.5 ) * Math.PI;
+
+            //     this.m_world.addEntity( _tEntity );
+            // }
         }
 
         public update( dt : number ) : void

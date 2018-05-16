@@ -74,9 +74,9 @@ namespace leojs
             _axisX = buildPrimitive( { 'shape' : 'arrow', 'length' : RF_ARROW_LENGTH * RF_BASE_DIM },
                                      { 'material' : 'simple', 'color' : core.RED } );
             _axisY = buildPrimitive( { 'shape' : 'arrow', 'length' : RF_ARROW_LENGTH * RF_BASE_DIM },
-                                     { 'material' : 'simple', 'color' : core.BLUE } );
-            _axisZ = buildPrimitive( { 'shape' : 'arrow', 'length' : RF_ARROW_LENGTH * RF_BASE_DIM },
                                      { 'material' : 'simple', 'color' : core.GREEN } );
+            _axisZ = buildPrimitive( { 'shape' : 'arrow', 'length' : RF_ARROW_LENGTH * RF_BASE_DIM },
+                                     { 'material' : 'simple', 'color' : core.BLUE } );
 
             this.m_renderables.push( _axisX );
             this.m_renderables.push( _axisY );
@@ -116,6 +116,8 @@ namespace leojs
             core.LMat4.extractColumnInPlace( this.m_axisZ, this.m_frameMatrix, 2 );
 
             // Update the rotation matrices for the arrows
+            // First, we transform the arrow to its corresponding zero-orientation, and then ...
+            // to the orientation of the reference frame
             core.mulMatMat44InPlace( this.m_rotArrowX, this.m_rotMat, core.ROT_Z_NEG_90 );
             core.LMat4.copy( this.m_rotArrowY, this.m_rotMat ); // just copy for Y
             core.mulMatMat44InPlace( this.m_rotArrowZ, this.m_rotMat, core.ROT_X_90 );
@@ -136,7 +138,7 @@ namespace leojs
             core.LMat4.fromPosEulerInPlace( this.m_frameMatrix,
                                             this.m_posXYZ, this.m_rotEuler );
             this._updateAxes();
-            this._updateGraphicsPosition();
+            // this._updateGraphicsPosition();
             this._updateGraphicsOrientation();
         }
         public setFrameMatrix( mat : core.LMat4 ) : void
@@ -155,7 +157,10 @@ namespace leojs
 
         public update( dt : number ) : void
         {
-            this.setOrientation( core.LVec3.plus( this.m_rotEuler, new core.LVec3( 0, dt * 0.1, 0 ) ) );
+            this.setPosition( this.m_parent.position );
+            this.setOrientation( this.m_parent.rotation );
+            // this.setOrientation( core.LVec3.plus( this.m_rotEuler, 
+            //                                       new core.LVec3( dt * 0.001, dt * 0.001, dt * 0.001 ) ) );
         }
     }
 

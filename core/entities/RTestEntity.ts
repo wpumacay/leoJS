@@ -22,8 +22,11 @@ namespace leojs
         public update( dt : number ) : void
         {
             super.update( dt );
-            
+
             // Do some testing here :D
+            this.rotation.x += dt * 0.001;
+            this.rotation.y += dt * 0.001;
+            this.rotation.z += dt * 0.001;
         }
 
 

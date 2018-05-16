@@ -10,10 +10,16 @@ namespace leojs
     export class REntity
     {
 
+        public position : core.LVec3;
+        public rotation : core.LVec3;// Euler angles
+
         protected m_components : { [id:number] : RComponent };
 
         constructor()
         {
+            this.position = new core.LVec3( 0, 0, 0 );
+            this.rotation = new core.LVec3( 0, 0, 0 );
+            
             this.m_components = {};
         }
 
