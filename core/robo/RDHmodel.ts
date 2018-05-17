@@ -20,6 +20,8 @@ namespace leojs
 
         private m_world : RDHWorld;
 
+        private m_time : number;
+
         constructor( world : RDHWorld,
                      dhTable : RDHtable )
         {
@@ -27,6 +29,7 @@ namespace leojs
             this.m_frames = [];
 
             this.m_world = world;
+            this.m_time = 0.0;
 
             this._buildModel();
         }
@@ -125,9 +128,11 @@ namespace leojs
 
         public update( dt : number ) : void
         {
+            this.m_time += dt * 0.001;
+
             this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 0 ) + dt * 0.00025, 0 );
             this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 1 ) + dt * 0.00025, 1 );
-            // this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 2 ) + dt * 0.00025, 2 );
+            this.m_dhTable.setJointValue( 2.5 * ( Math.sin( this.m_time * 0.5 ) + 1 ) , 2 );
 
             this._updateModel();
         }

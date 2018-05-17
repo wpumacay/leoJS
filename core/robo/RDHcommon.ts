@@ -41,8 +41,8 @@ namespace leojs
 
         constructor( pFixed : boolean[],
                      pValues : number[],
-                     jointSign : number = 1.0,
-                     jointOffset : number = 0.0 )
+                     jointSign? : number,
+                     jointOffset? : number )
         {
             console.assert( pFixed.length == 4, 'wrong length for pFixed parameter' );
             console.assert( pValues.length == 4, 'wrong length for pValues parameter' );
@@ -51,8 +51,8 @@ namespace leojs
             this.m_values = pValues;
             this.m_transform = new core.LMat4();
 
-            this.m_jointSign = jointSign;
-            this.m_jointOffset = jointOffset;
+            this.m_jointSign = jointSign || 1.0;
+            this.m_jointOffset = jointOffset || 0.0;
 
             this.m_jointType = this._getJointType();
 

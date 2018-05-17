@@ -48,7 +48,8 @@ namespace leojs
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ 0, 10.0, 0, 0 ] ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, false, true ],
-                                                      [ 0, 5.0, 0, 0 ] ) );
+                                                      [ 0, 5.0, 0, 0 ],
+                                                      -1, 0 ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ 0, 0, -5.0, 0 ] ) );
         }
