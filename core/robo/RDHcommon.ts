@@ -39,8 +39,13 @@ namespace leojs
         private m_jointOffset : number;
         private m_jointType : JointType;
 
+        private m_minJointValue : number;
+        private m_maxJointValue : number;
+
         constructor( pFixed : boolean[],
                      pValues : number[],
+                     pMinJointValue : number,
+                     pMaxJointValue : number,
                      jointSign? : number,
                      jointOffset? : number )
         {
@@ -56,11 +61,16 @@ namespace leojs
 
             this.m_jointType = this._getJointType();
 
+            this.m_minJointValue = pMinJointValue;
+            this.m_maxJointValue = pMaxJointValue;
+
             this._updateTransform();
         }
 
         public fixed() : boolean[] { return this.m_fixed; }
         public values() : number[] { return this.m_values; }
+        public minJointValue() : number { return this.m_minJointValue; }
+        public maxJointValue() : number { return this.m_maxJointValue; }
 
         public setParamValue( value : number, indx : DHparams )
         {
@@ -150,16 +160,22 @@ namespace leojs
     export class RDHtable
     {
         private m_entries : RDHentry[];
+        private m_totalTransform : core.LMat4;
+        private m_xyz : core.LVec3;
 
         constructor()
         {
             this.m_entries = [];
+            this.m_totalTransform = new core.LMat4();
+            this.m_xyz = new core.LVec3( 0, 0, 0 );
         }
 
         public appendEntry( entry : RDHentry ) : void
         {
             this.m_entries.push( entry );
         }
+
+        public numJoints() : number { return this.m_entries.length; }
 
         public setJointValue( value : number, indx : number ) : void
         {
@@ -204,6 +220,32 @@ namespace leojs
             return 0;
         }
 
+        public getMinJointValue( indx : number ) : number
+        {
+            if ( indx < 0 || indx >= this.m_entries.length )
+            {
+                console.error( 'RDHtable> Trying to set value for out of range indx ' + indx );
+                return 0;
+            }
+
+            let _entry : RDHentry = this.m_entries[ indx ];
+
+            return _entry.minJointValue();
+        }
+
+        public getMaxJointValue( indx : number ) : number
+        {
+            if ( indx < 0 || indx >= this.m_entries.length )
+            {
+                console.error( 'RDHtable> Trying to set value for out of range indx ' + indx );
+                return 0;
+            }
+
+            let _entry : RDHentry = this.m_entries[ indx ];
+
+            return _entry.maxJointValue();
+        }
+
         public getTransform( indx : number ) : core.LMat4
         {
             if ( indx < 0 || indx >= this.m_entries.length )
@@ -234,12 +276,31 @@ namespace leojs
             return null;
         }
 
-        public getFullTransform() : core.LMat4
+        private _getTotalTransform() : core.LMat4
         {
             return this.getTransformInRange( 0, this.m_entries.length - 1 );
         }
 
         public entries() : RDHentry[] { return this.m_entries; }
+        public getFullTransform() : core.LMat4 { return this.m_totalTransform; }
+        public getEndEffectorXYZ() : core.LVec3 { return this.m_xyz; }
+        public getAllJointValues() : number[]
+        {
+            let _jointValues : number[] = [];
+
+            for ( let q = 0; q < this.m_entries.length; q++ )
+            {
+                _jointValues.push( this.getJointValue( q ) );
+            }
+
+            return _jointValues;
+        }
+
+        public update( dt : number ) : void
+        {
+            this.m_totalTransform = this._getTotalTransform();
+            core.LMat4.extractPositionInPlace( this.m_xyz, this.m_totalTransform );
+        }
     }
 
 }

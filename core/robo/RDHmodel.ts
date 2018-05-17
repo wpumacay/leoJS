@@ -126,16 +126,44 @@ namespace leojs
             }
         }
 
+        public forward( jointValues : number[] ) : void
+        {
+            // Check if the right number of joints has been provided
+            if ( jointValues.length == this.m_dhTable.numJoints() )
+            {
+                for ( let q = 0; q < this.m_dhTable.numJoints(); q++ )
+                {
+                    this.m_dhTable.setJointValue( jointValues[q], q );
+                }
+            }
+            else
+            {
+                console.warn( 'RDHmodel> wrong number of joints sent for forward kinematics' );
+            }
+
+            this.m_dhTable.update( 0 );
+        }
+
+        public inverse( xyz : core.LVec3 ) : void
+        {
+            // Use custom solver object
+        }
+
         public update( dt : number ) : void
         {
             this.m_time += dt * 0.001;
 
-            this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 0 ) + dt * 0.00025, 0 );
-            this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 1 ) + dt * 0.00025, 1 );
-            this.m_dhTable.setJointValue( 2.5 * ( Math.sin( this.m_time * 0.5 ) + 1 ) , 2 );
+            // this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 0 ) + dt * 0.00025, 0 );
+            // this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 1 ) + dt * 0.00025, 1 );
+            // this.m_dhTable.setJointValue( 2.5 * ( Math.sin( this.m_time * 0.5 ) + 1 ) , 2 );
 
+            // Update internal states of the robot representation
+            this.m_dhTable.update( dt );
+            // Update model of the robot using the before updated representation
             this._updateModel();
         }
+
+        public getDHtable() : RDHtable { return this.m_dhTable; }
 
     }
 
