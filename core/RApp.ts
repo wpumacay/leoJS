@@ -6,6 +6,8 @@
 /// <reference path="worlds/RWorld.ts" />
 /// <reference path="entities/RTestEntity.ts" />
 
+/// <reference path="worlds/RDHWorld.ts" />
+
 namespace leojs
 {
 
@@ -65,13 +67,14 @@ namespace leojs
         public init() : void
         {
             // Initialize stuff here
-            this.m_world = new RWorld( this.m_gApp.width(), this.m_gApp.height() );
+            // this.m_world = new RWorld( this.m_gApp.width(), this.m_gApp.height() );
+            this.m_world = new RDHWorld( this.m_gApp.width(), this.m_gApp.height() );
             this.m_gApp.addScene( this.m_world.scene() );
 
-            this.m_testEntity = new RTestEntity();
-            this.m_world.addEntity( this.m_testEntity );
+            // this.m_testEntity = new RTestEntity();
+            // this.m_world.addEntity( this.m_testEntity );
 
-            let q : number;
+            // let q : number;
 
             // for ( q = 0; q < 10; q++ )
             // {

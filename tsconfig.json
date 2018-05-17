@@ -62,6 +62,12 @@
     "core/entities/REntity.ts",
     "core/entities/RTestEntity.ts",
     "core/worlds/RWorld.ts",
+    // robo - dh functionality --------
+    "core/robo/RDHcommon.ts",
+    "core/robo/RDHguiController.ts",
+    "core/robo/RDHmodel.ts",
+    "core/worlds/RDHWorld.ts",
+    // --------------------------------
     "RAssets.ts",
     "core/RApp.ts",
     "main.ts",

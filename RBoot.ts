@@ -57,6 +57,12 @@ namespace leojs
         'core/entities/REntity.js',
         'core/entities/RTestEntity.js',
         'core/worlds/RWorld.js',
+        // robo - dh functionality --------
+        'core/robo/RDHcommon.js',
+        'core/robo/RDHguiController.js',
+        'core/robo/RDHmodel.js',
+        'core/worlds/RDHWorld.js',
+        // --------------------------------
         'core/RApp.js',
         'main.js'
         // ****************************************************

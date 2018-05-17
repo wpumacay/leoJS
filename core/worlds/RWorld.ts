@@ -35,9 +35,9 @@ namespace leojs
         {
             this.m_scene = new core.LScene( 'mainScene' );
 
-            let _camera : engine3d.LFixedPointCamera = new engine3d.LFixedPointCamera( new core.LVec3( 10.0, 10.0, 10.0 ),
+            let _camera : engine3d.LFixedPointCamera = new engine3d.LFixedPointCamera( new core.LVec3( 20.0, 20.0, 20.0 ),
                                                                                        new core.LVec3( 0.0, 0.0, 0.0 ),
-                                                                                       new core.LVec3( 0.0, 1.0, 0.0 ),
+                                                                                       new core.LVec3( 0.0, 0.0, 1.0 ),
                                                                                        this.m_appWidth, this.m_appHeight,
                                                                                        1.0, 100.0,
                                                                                        45.0, core.ProjectionMode.PERSPECTIVE,
