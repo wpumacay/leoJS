@@ -1,42 +1,44 @@
 
 
-/// <reference path="RDHcommon.ts" />
-/// <reference path="../entities/REntity.ts" />
-/// <reference path="../components/graphics/RReferenceFrameComponent.ts" />
-/// <reference path="../components/graphics/RMesh3dComponent.ts" />
+/// <reference path="../../core/entities/REntity.ts" />
+/// <reference path="../../core/components/graphics/RReferenceFrameComponent.ts" />
+/// <reference path="../../core/components/graphics/RMesh3dComponent.ts" />
 /// <reference path="../../ext/cat1js/engine3d/debug/LDebugSystem.ts" />
-/// <reference path="../worlds/RDHWorld.ts" />
 
-/// <reference path="RDHjointRevoluteComponent.ts" />
-/// <reference path="RDHjointPrismaticComponent.ts" />
+/// <reference path="RDHcommon.ts" />
+/// <reference path="RDHWorld.ts" />
+/// <reference path="components/RDHjointRevoluteComponent.ts" />
+/// <reference path="components/RDHjointPrismaticComponent.ts" />
 
 namespace leojs
 {
 
-    export class RDHmodel
+    export abstract class RDHmodel
     {
 
-        private m_dhTable : RDHtable;
-        private m_frames : REntity[];
-        private m_base : REntity;
-        private m_joints : REntity[];
+        protected m_dhTable : RDHtable;
+        protected m_frames : REntity[];
+        protected m_base : REntity;
+        protected m_joints : REntity[];
 
-        private m_world : RDHWorld;
+        protected m_world : RDHWorld;
 
-        private m_time : number;
+        protected m_time : number;
 
-        constructor( world : RDHWorld,
-                     dhTable : RDHtable )
+        constructor( world : RDHWorld )
         {
-            this.m_dhTable = dhTable;
+            this.m_dhTable = new RDHtable();
             this.m_frames = [];
             this.m_joints = [];
 
             this.m_world = world;
             this.m_time = 0.0;
 
+            this._buildDHrepresentation();
             this._buildModel();
         }
+
+        protected abstract _buildDHrepresentation() : void;
 
         private _buildModel() : void
         {
@@ -162,7 +164,7 @@ namespace leojs
 
         public inverse( xyz : core.LVec3 ) : void
         {
-            // Use custom solver object
+            // Override this - each model should implement its own solver
         }
 
         public update( dt : number ) : void

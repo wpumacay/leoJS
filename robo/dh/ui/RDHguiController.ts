@@ -1,7 +1,7 @@
 
-/// <reference path="RDHcommon.ts" />
-/// <reference path="RDHmodel.ts" />
-/// <reference path="../../ext/dat.gui.d.ts" />
+/// <reference path="../RDHcommon.ts" />
+/// <reference path="../RDHmodel.ts" />
+/// <reference path="../../../ext/dat.gui.d.ts" />
 
 
 namespace leojs

@@ -1,12 +1,13 @@
 
 /// <reference path="../ext/cat1js/core/LApplication.ts" />
 /// <reference path="../ext/cat1js/LAssets.ts" />
+
 /// <reference path="../RAssets.ts" />
 /// <reference path="RCommon.ts" />
 /// <reference path="worlds/RWorld.ts" />
 /// <reference path="entities/RTestEntity.ts" />
 
-/// <reference path="worlds/RDHWorld.ts" />
+/// <reference path="../robo/dh/RDHWorld.ts" />
 
 namespace leojs
 {
@@ -68,7 +69,9 @@ namespace leojs
         {
             // Initialize stuff here
             // this.m_world = new RWorld( this.m_gApp.width(), this.m_gApp.height() );
-            this.m_world = new RDHWorld( this.m_gApp.width(), this.m_gApp.height() );
+            this.m_world = new RDHWorld( this.m_gApp.width(), 
+                                         this.m_gApp.height(),
+                                         RobotId.SCARA );
             this.m_gApp.addScene( this.m_world.scene() );
 
             // this.m_testEntity = new RTestEntity();

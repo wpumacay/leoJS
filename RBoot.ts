@@ -58,12 +58,14 @@ namespace leojs
         'core/entities/RTestEntity.js',
         'core/worlds/RWorld.js',
         // robo - dh functionality --------
-        'core/robo/RDHcommon.js',
-        'core/robo/RDHguiController.js',
-        'core/robo/RDHmodel.js',
-        'core/robo/RDHjointPrismaticComponent.js',
-        'core/robo/RDHjointRevoluteComponent.js',
-        'core/worlds/RDHWorld.js',
+        'robo/dh/RDHcommon.js',
+        'robo/dh/components/RDHjointPrismaticComponent.js',
+        'robo/dh/components/RDHjointRevoluteComponent.js',
+        'robo/dh/RDHmodel.js',
+        'robo/dh/models/RDHmodelScara.js',
+        'robo/dh/models/RDHmodelKukaKR210.js',
+        'robo/dh/ui/RDHguiController.js',
+        'robo/dh/RDHWorld.js',
         // --------------------------------
         'core/RApp.js',
         'main.js'

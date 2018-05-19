@@ -1,5 +1,6 @@
 
-/// <reference path="../components/graphics/RGraphicsComponent.ts" />
+/// <reference path="../../../ext/cat1js/engine3d/graphics/LMesh.ts" />
+/// <reference path="../../../core/components/graphics/RGraphicsComponent.ts" />
 
 
 
