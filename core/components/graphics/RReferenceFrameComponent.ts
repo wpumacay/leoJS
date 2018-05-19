@@ -161,6 +161,7 @@ namespace leojs
             this.setOrientation( this.m_parent.rotation );
             // this.setOrientation( core.LVec3.plus( this.m_rotEuler, 
             //                                       new core.LVec3( dt * 0.001, dt * 0.001, dt * 0.001 ) ) );
+            super.update( dt );
         }
     }
 

@@ -24,7 +24,13 @@ namespace leojs
         }
 
         public renderables() : core.LIRenderable[] { return this.m_renderables; }
-
+        public update( dt : number )
+        {
+            for ( let _renderable of this.m_renderables )
+            {
+                _renderable.update();
+            }
+        }
 
     }
 

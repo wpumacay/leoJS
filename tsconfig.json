@@ -66,6 +66,8 @@
     "core/robo/RDHcommon.ts",
     "core/robo/RDHguiController.ts",
     "core/robo/RDHmodel.ts",
+    "core/robo/RDHjointPrismaticComponent.ts",
+    "core/robo/RDHjointRevoluteComponent.ts",
     "core/worlds/RDHWorld.ts",
     // --------------------------------
     "RAssets.ts",

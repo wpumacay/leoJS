@@ -61,6 +61,8 @@ namespace leojs
         'core/robo/RDHcommon.js',
         'core/robo/RDHguiController.js',
         'core/robo/RDHmodel.js',
+        'core/robo/RDHjointPrismaticComponent.js',
+        'core/robo/RDHjointRevoluteComponent.js',
         'core/worlds/RDHWorld.js',
         // --------------------------------
         'core/RApp.js',
