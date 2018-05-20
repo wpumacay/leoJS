@@ -189,12 +189,32 @@ namespace leojs
 
             if ( _entry.getJointType() == JointType.REVOLUTE )
             {
+                value = this.validateJointValue( value, indx );
                 _entry.setParamValue( value, DHparams.theta_i );
             }
             else if ( _entry.getJointType() == JointType.PRISMATIC )
             {
+                value = this.validateJointValue( value, indx );
                 _entry.setParamValue( value, DHparams.d_i );
             }
+        }
+
+        public validateJointValue( value : number, indx : number ) : number
+        {
+            let _entry : RDHentry = this.m_entries[ indx ];
+
+            if ( value < _entry.minJointValue() )
+            {
+                console.log( 'RDHmodel> min value reached: ' + _entry.minJointValue() );
+                value = _entry.minJointValue();
+            }
+            else if ( value > _entry.maxJointValue() )
+            {
+                console.log( 'RDHmodel> max value reached: ' + _entry.maxJointValue() );
+                value = _entry.maxJointValue();
+            }
+
+            return value;
         }
 
         public getJointValue( indx : number ) : number

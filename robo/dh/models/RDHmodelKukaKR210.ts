@@ -10,8 +10,6 @@ namespace leojs
     export class RDHmodelKukaKR210 extends RDHmodel
     {
 
-        
-
         constructor( world : RDHWorld )
         {
             super( world );
@@ -32,6 +30,22 @@ namespace leojs
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ 0, 0, -5.0, 0 ],
                                                       -0.5 * Math.PI, 0.5 * Math.PI ) );
+        }
+
+        protected _computeMinMaxEstimates() : void
+        {
+            // TODO: Implement this part
+        }
+
+        public inverse( xyz : core.LVec3 ) : void
+        {
+            // TODO: Implement this part
+        }
+
+        public isInWorkspace( xyz : core.LVec3 ) : boolean
+        {
+            // TODO: Implement this part
+            return false;
         }
     }
 

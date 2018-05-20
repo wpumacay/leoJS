@@ -309,9 +309,24 @@ namespace leojs
             {
                 _fInverseKinematics.addChild( new RUItext( 'ik_q' + ( q + 1 ), '0' ) );
             }
-            _fInverseKinematics.addChild( new RUIslider( 'ik_x', -10, 10, 5, () => { _self.doInverseKinematics(); } ) );
-            _fInverseKinematics.addChild( new RUIslider( 'ik_y', -10, 10, 5, () => { _self.doInverseKinematics(); } ) );
-            _fInverseKinematics.addChild( new RUIslider( 'ik_z', -10, 10, 5, () => { _self.doInverseKinematics(); } ) );            
+
+            _fInverseKinematics.addChild( new RUIslider( 'ik_x', 
+                                                         this.m_dhModel.xyzMinEstimate().x, 
+                                                         this.m_dhModel.xyzMaxEstimate().x, 
+                                                         this.m_dhModel.xyzZeroPosition().x, 
+                                                         () => { _self.doInverseKinematics(); } ) );
+
+            _fInverseKinematics.addChild( new RUIslider( 'ik_y', 
+                                                         this.m_dhModel.xyzMinEstimate().y, 
+                                                         this.m_dhModel.xyzMaxEstimate().y, 
+                                                         this.m_dhModel.xyzZeroPosition().y, 
+                                                         () => { _self.doInverseKinematics(); } ) );
+
+            _fInverseKinematics.addChild( new RUIslider( 'ik_z', 
+                                                         this.m_dhModel.xyzMinEstimate().z, 
+                                                         this.m_dhModel.xyzMaxEstimate().z, 
+                                                         this.m_dhModel.xyzZeroPosition().z, 
+                                                         () => { _self.doInverseKinematics(); } ) );
             // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
             this.m_uiWrapper.appendUIelement( _fInverseKinematics );
             // ******************************************************************

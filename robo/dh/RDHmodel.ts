@@ -25,6 +25,11 @@ namespace leojs
 
         protected m_time : number;
 
+        protected m_xyzMinEstimate : core.LVec3;
+        protected m_xyzMaxEstimate : core.LVec3;
+
+        protected m_xyzZeroPosition : core.LVec3;
+
         constructor( world : RDHWorld )
         {
             this.m_dhTable = new RDHtable();
@@ -34,11 +39,30 @@ namespace leojs
             this.m_world = world;
             this.m_time = 0.0;
 
+            this.m_xyzMinEstimate = new core.LVec3( 0, 0, 0 );
+            this.m_xyzMaxEstimate = new core.LVec3( 0, 0, 0 );
+            this.m_xyzZeroPosition = new core.LVec3( 0, 0, 0 );
+
             this._buildDHrepresentation();
             this._buildModel();
+            this._computeMinMaxEstimates();
+            this._computeXYZzeroPosition();
         }
 
         protected abstract _buildDHrepresentation() : void;
+        protected abstract _computeMinMaxEstimates() : void;
+
+        public xyzMinEstimate() : core.LVec3 { return this.m_xyzMinEstimate; }
+        public xyzMaxEstimate() : core.LVec3 { return this.m_xyzMaxEstimate; }
+        public xyzZeroPosition() : core.LVec3 { return this.m_xyzZeroPosition; }
+
+        private _computeXYZzeroPosition() : void
+        {
+            // Initialize transform with default zero joint values
+            this.m_dhTable.update( 0 );
+            // Get the zero position from this initial configuration
+            this.m_xyzZeroPosition = this.m_dhTable.getEndEffectorXYZ().clone();
+        }
 
         private _buildModel() : void
         {
@@ -162,10 +186,8 @@ namespace leojs
             this.m_dhTable.update( 0 );
         }
 
-        public inverse( xyz : core.LVec3 ) : void
-        {
-            // Override this - each model should implement its own solver
-        }
+        public abstract inverse( xyz : core.LVec3 ) : void;
+        public abstract isInWorkspace( xyz : core.LVec3 ) : boolean;
 
         public update( dt : number ) : void
         {
