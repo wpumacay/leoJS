@@ -139,10 +139,6 @@ namespace leojs
                 core.LMat4.extractEulerFromRotationInPlace( _frameEntity.rotation,
                                                             _transform );
 
-                _frameEntity.rotation.x *= -1;
-                _frameEntity.rotation.y *= -1;
-                _frameEntity.rotation.z *= -1;
-
                 if ( q < ( _entries.length - 1 ) )
                 {
                     engine3d.DebugSystem.drawLine( this.m_frames[ q ].position,

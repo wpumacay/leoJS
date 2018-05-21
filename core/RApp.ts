@@ -1,5 +1,6 @@
 
 /// <reference path="../ext/cat1js/core/LApplication.ts" />
+/// <reference path="../ext/cat1js/engine3d/debug/LDebugSystem.ts" />
 /// <reference path="../ext/cat1js/LAssets.ts" />
 
 /// <reference path="../RAssets.ts" />
@@ -99,6 +100,10 @@ namespace leojs
         public update( dt : number ) : void
         {
             this.m_world.update( dt );
+
+            engine3d.DebugSystem.drawLine( core.ORIGIN, new core.LVec3( 3, 0, 0 ), core.RED );
+            engine3d.DebugSystem.drawLine( core.ORIGIN, new core.LVec3( 0, 3, 0 ), core.GREEN );
+            engine3d.DebugSystem.drawLine( core.ORIGIN, new core.LVec3( 0, 0, 3 ), core.BLUE );
         }
 
         public resizeApp( appWidth : number, appHeight : number ) : void
