@@ -7,7 +7,7 @@
 namespace leojs
 {
 
-    export const RF_BASE_DIM : number = 1.0;
+    export const RF_BASE_DIM : number = 0.25;
     export const RF_SPHERE_RADIUS : number = 0.25;
     export const RF_ARROW_LENGTH : number = 2.0;
     export const RF_AXIS_X_INDX : number = 0;

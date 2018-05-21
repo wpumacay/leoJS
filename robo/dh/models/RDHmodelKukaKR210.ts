@@ -18,18 +18,24 @@ namespace leojs
         protected _buildDHrepresentation() : void
         {
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
-                                                      [ 0, 0, 5.0, 0 ],
-                                                      -0.5 * Math.PI, 0.5 * Math.PI ) );
+                                                      [ 0, 0, 0.75, 0 ],
+                                                      -Math.PI, Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
-                                                      [ 0, 10.0, 0, 0 ],
-                                                      -0.5 * Math.PI, 0.5 * Math.PI ) );
-            this.m_dhTable.appendEntry( new RDHentry( [ true, true, false, true ],
-                                                      [ 0, 5.0, 0, 0 ],
-                                                      0, 10,
-                                                      -1, 0 ) );
+                                                      [ -0.5 * Math.PI, 0.35, 0, 0 ],
+                                                      -Math.PI, Math.PI,
+                                                      1, -0.5 * Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
-                                                      [ 0, 0, -5.0, 0 ],
-                                                      -0.5 * Math.PI, 0.5 * Math.PI ) );
+                                                      [ 0, 1.25, 0, 0 ],
+                                                      -Math.PI, Math.PI ) );
+            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+                                                      [ -0.5 * Math.PI, -0.054, 1.5, 0 ],
+                                                      -Math.PI, Math.PI ) );
+            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+                                                      [ -0.5 * Math.PI, 0, 0, 0 ],
+                                                      -Math.PI, Math.PI ) );
+            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+                                                      [ -0.5 * Math.PI, 0, 0, 0 ],
+                                                      -Math.PI, Math.PI ) );
         }
 
         protected _computeMinMaxEstimates() : void

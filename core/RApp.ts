@@ -71,7 +71,7 @@ namespace leojs
             // this.m_world = new RWorld( this.m_gApp.width(), this.m_gApp.height() );
             this.m_world = new RDHWorld( this.m_gApp.width(), 
                                          this.m_gApp.height(),
-                                         RobotId.SCARA );
+                                         RobotId.KUKA_KR210 );
             this.m_gApp.addScene( this.m_world.scene() );
 
             // this.m_testEntity = new RTestEntity();

@@ -67,9 +67,9 @@ namespace leojs
         private _buildModel() : void
         {
             let _baseMesh : engine3d.LMesh = buildPrimitive( { 'shape' : 'box',
-                                                               'width' : 1.0, 
-                                                               'depth' : 2.0,
-                                                               'height' : 1.0 },
+                                                               'width' : 0.25, 
+                                                               'depth' : 0.5,
+                                                               'height' : 0.25 },
                                                               { 'material' : 'simple',
                                                                 'color' : core.GRAY } );
             this.m_base = new REntity();

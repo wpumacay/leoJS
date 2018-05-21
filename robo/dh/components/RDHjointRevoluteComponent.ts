@@ -31,8 +31,8 @@ namespace leojs
         private _initializeRevoluteJoint() : void
         {
             this.m_jointMeshRef = buildPrimitive( { 'shape' : 'cylinder',
-                                                    'radius' : 0.5,
-                                                    'height' : 1.0 },
+                                                    'radius' : 0.1,
+                                                    'height' : 0.2 },
                                                   { 'material' : 'simple',
                                                     'color' : core.LIGHT_GRAY } );
 
