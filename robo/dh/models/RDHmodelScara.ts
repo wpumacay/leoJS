@@ -18,17 +18,17 @@ namespace leojs
         protected _buildDHrepresentation() : void
         {
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
-                                                      [ 0, 0, 5.0, 0 ],
+                                                      [ 0, 0, 0.5, 0 ],
                                                       -Math.PI, Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
-                                                      [ 0, 5.0, 0, 0 ],
+                                                      [ 0, 0.5, 0, 0 ],
                                                       -Math.PI, Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, false, true ],
-                                                      [ 0, 5.0, 0, 0 ],
-                                                      0, 10,
+                                                      [ 0, 0.5, 0, 0 ],
+                                                      0, 1,
                                                       -1, 0 ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
-                                                      [ 0, 0, -5.0, 0 ],
+                                                      [ 0, 0, -0.5, 0 ],
                                                       -Math.PI, Math.PI ) );
         }
 

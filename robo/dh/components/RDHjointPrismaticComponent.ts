@@ -33,16 +33,16 @@ namespace leojs
         private _initializePrismaticJoint() : void
         {
             this.m_jointFixedMeshRef = buildPrimitive( { 'shape' : 'box',
-                                                         'width' : 0.5,
-                                                         'depth' : 0.5,
-                                                         'height' : 0.5 },
+                                                         'width' : 0.1,
+                                                         'depth' : 0.1,
+                                                         'height' : 0.1 },
                                                        { 'material' : 'simple',
                                                          'color' : core.LIGHT_GRAY } );
 
             this.m_jointMovingMeshRef = buildPrimitive( { 'shape' : 'box',
-                                                          'width' : 0.25,
-                                                          'depth' : 0.75,
-                                                          'height' : 0.25 },
+                                                          'width' : 0.05,
+                                                          'depth' : 0.15,
+                                                          'height' : 0.05 },
                                                         { 'material' : 'simple',
                                                           'color' : core.LIGHT_GRAY } );
 
