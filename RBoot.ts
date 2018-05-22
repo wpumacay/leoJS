@@ -59,6 +59,7 @@ namespace leojs
         'core/worlds/RWorld.js',
         // robo - dh functionality --------
         'robo/dh/RDHcommon.js',
+        'robo/dh/components/RDHendEffectorComponent.js',
         'robo/dh/components/RDHjointPrismaticComponent.js',
         'robo/dh/components/RDHjointRevoluteComponent.js',
         'robo/dh/RDHmodel.js',

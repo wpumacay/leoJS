@@ -64,6 +64,7 @@
     "core/worlds/RWorld.ts",
     // robo - dh functionality --------
     "robo/dh/RDHcommon.ts",
+    "robo/dh/components/RDHendEffectorComponent.ts",
     "robo/dh/components/RDHjointPrismaticComponent.ts",
     "robo/dh/components/RDHjointRevoluteComponent.ts",
     "robo/dh/RDHmodel.ts",

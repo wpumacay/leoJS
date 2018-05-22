@@ -7,6 +7,7 @@
 
 /// <reference path="RDHcommon.ts" />
 /// <reference path="RDHWorld.ts" />
+/// <reference path="components/RDHendEffectorComponent.ts" />
 /// <reference path="components/RDHjointRevoluteComponent.ts" />
 /// <reference path="components/RDHjointPrismaticComponent.ts" />
 
@@ -20,6 +21,9 @@ namespace leojs
         protected m_frames : REntity[];
         protected m_base : REntity;
         protected m_joints : REntity[];
+        protected m_endEffector : REntity;
+        protected m_endEffectorTotalTransform : core.LMat4;
+        protected m_endEffectorOffset : core.LMat4;
 
         protected m_world : RDHWorld;
 
@@ -43,10 +47,14 @@ namespace leojs
             this.m_xyzMaxEstimate = new core.LVec3( 0, 0, 0 );
             this.m_xyzZeroPosition = new core.LVec3( 0, 0, 0 );
 
+            this.m_endEffectorTotalTransform = new core.LMat4();
+            this.m_endEffectorOffset = new core.LMat4();
+
             this._buildDHrepresentation();
             this._buildModel();
             this._computeMinMaxEstimates();
             this._computeXYZzeroPosition();
+            this._computeEndEffectorOffset();
         }
 
         protected abstract _buildDHrepresentation() : void;
@@ -64,6 +72,8 @@ namespace leojs
             this.m_xyzZeroPosition = this.m_dhTable.getEndEffectorXYZ().clone();
         }
 
+        protected abstract _computeEndEffectorOffset() : void;
+
         private _buildModel() : void
         {
             let _baseMesh : engine3d.LMesh = buildPrimitive( { 'shape' : 'box',
@@ -75,6 +85,10 @@ namespace leojs
             this.m_base = new REntity();
             this.m_base.addComponent( new RMesh3dComponent( this.m_base, _baseMesh ) );
             this.m_world.addEntity( this.m_base );
+
+            this.m_endEffector = new REntity();
+            this.m_endEffector.addComponent( new RDHendEffectorComponent( this.m_endEffector ) );
+            this.m_world.addEntity( this.m_endEffector );
 
             let _entries : RDHentry[] = this.m_dhTable.entries();
 
@@ -162,6 +176,16 @@ namespace leojs
                     _priJointComp.setJointValue( this.m_dhTable.getJointValue( q ) );
                 }
             }
+
+            // Update end effector
+            core.mulMatMat44InPlace( this.m_endEffectorTotalTransform,
+                                     this.m_dhTable.getFullTransform(),
+                                     this.m_endEffectorOffset );
+
+            core.LMat4.extractPositionInPlace( this.m_endEffector.position,
+                                               this.m_endEffectorTotalTransform );
+            core.LMat4.extractEulerFromRotationInPlace( this.m_endEffector.rotation,
+                                                        this.m_endEffectorTotalTransform );
         }
 
         public forward( jointValues : number[] ) : void

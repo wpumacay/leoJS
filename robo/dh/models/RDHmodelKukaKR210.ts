@@ -31,11 +31,17 @@ namespace leojs
                                                       [ -0.5 * Math.PI, -0.054, 1.5, 0 ],
                                                       -Math.PI, Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
-                                                      [ -0.5 * Math.PI, 0, 0, 0 ],
+                                                      [ 0.5 * Math.PI, 0, 0, 0 ],
                                                       -Math.PI, Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ -0.5 * Math.PI, 0, 0, 0 ],
                                                       -Math.PI, Math.PI ) );
+        }
+
+        protected _computeEndEffectorOffset() : void
+        {
+            let _effOffset : core.LVec3 = new core.LVec3( 0, 0, 0.193 + 0.0375 );
+            this.m_endEffectorOffset = core.LMat4.translation( _effOffset );
         }
 
         protected _computeMinMaxEstimates() : void

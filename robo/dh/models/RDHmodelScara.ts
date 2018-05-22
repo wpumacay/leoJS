@@ -32,6 +32,14 @@ namespace leojs
                                                       -Math.PI, Math.PI ) );
         }
 
+        protected _computeEndEffectorOffset() : void
+        {
+            let _effOffset : core.LVec3 = new core.LVec3( 0, 0, -0.5 );
+            this.m_endEffectorOffset = core.LMat4.translation( _effOffset );
+            this.m_endEffectorOffset = core.mulMatMat44( this.m_endEffectorOffset,
+                                                         core.ROT_Y_180 );
+        }
+
         protected _computeMinMaxEstimates() : void
         {
             // Get the parameters from the dh table
