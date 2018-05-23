@@ -23,7 +23,7 @@ namespace leojs
         protected m_joints : REntity[];
         protected m_endEffector : REntity;
         protected m_endEffectorTotalTransform : core.LMat4;
-        protected m_endEffectorOffset : core.LMat4;
+        protected m_endEffectorCompensation : core.LMat4;
 
         protected m_world : RDHWorld;
 
@@ -33,6 +33,7 @@ namespace leojs
         protected m_xyzMaxEstimate : core.LVec3;
 
         protected m_xyzZeroPosition : core.LVec3;
+        protected m_rpyZeroPosition : core.LVec3;
 
         constructor( world : RDHWorld )
         {
@@ -46,15 +47,16 @@ namespace leojs
             this.m_xyzMinEstimate = new core.LVec3( 0, 0, 0 );
             this.m_xyzMaxEstimate = new core.LVec3( 0, 0, 0 );
             this.m_xyzZeroPosition = new core.LVec3( 0, 0, 0 );
+            this.m_rpyZeroPosition = new core.LVec3( 0, 0, 0 );
 
             this.m_endEffectorTotalTransform = new core.LMat4();
-            this.m_endEffectorOffset = new core.LMat4();
+            this.m_endEffectorCompensation = new core.LMat4();
 
             this._buildDHrepresentation();
             this._buildModel();
+            this._computeEndEffectorOffset();
             this._computeMinMaxEstimates();
             this._computeXYZzeroPosition();
-            this._computeEndEffectorOffset();
         }
 
         protected abstract _buildDHrepresentation() : void;
@@ -63,13 +65,19 @@ namespace leojs
         public xyzMinEstimate() : core.LVec3 { return this.m_xyzMinEstimate; }
         public xyzMaxEstimate() : core.LVec3 { return this.m_xyzMaxEstimate; }
         public xyzZeroPosition() : core.LVec3 { return this.m_xyzZeroPosition; }
+        public rpyZeroPosition() : core.LVec3 { return this.m_rpyZeroPosition; }
 
         private _computeXYZzeroPosition() : void
         {
             // Initialize transform with default zero joint values
             this.m_dhTable.update( 0 );
             // Get the zero position from this initial configuration
-            this.m_xyzZeroPosition = this.m_dhTable.getEndEffectorXYZ().clone();
+            // Update end effector
+            core.mulMatMat44InPlace( this.m_endEffectorTotalTransform,
+                                     this.m_dhTable.getFullTransform(),
+                                     this.m_endEffectorCompensation );
+            core.LMat4.extractPositionInPlace( this.m_xyzZeroPosition, this.m_endEffectorTotalTransform );
+            core.LMat4.extractEulerFromRotationInPlace( this.m_rpyZeroPosition, this.m_endEffectorTotalTransform );
         }
 
         protected abstract _computeEndEffectorOffset() : void;
@@ -180,7 +188,7 @@ namespace leojs
             // Update end effector
             core.mulMatMat44InPlace( this.m_endEffectorTotalTransform,
                                      this.m_dhTable.getFullTransform(),
-                                     this.m_endEffectorOffset );
+                                     this.m_endEffectorCompensation );
 
             core.LMat4.extractPositionInPlace( this.m_endEffector.position,
                                                this.m_endEffectorTotalTransform );
@@ -188,7 +196,7 @@ namespace leojs
                                                         this.m_endEffectorTotalTransform );
         }
 
-        public forward( jointValues : number[] ) : void
+        public forward( jointValues : number[] ) : core.LVec3
         {
             // Check if the right number of joints has been provided
             if ( jointValues.length == this.m_dhTable.numJoints() )
@@ -204,9 +212,11 @@ namespace leojs
             }
 
             this.m_dhTable.update( 0 );
+
+            return this.m_dhTable.getEndEffectorXYZ().clone();
         }
 
-        public abstract inverse( xyz : core.LVec3, rpy : core.LVec3 ) : void;
+        public abstract inverse( xyz : core.LVec3, rpy : core.LVec3 ) : number[];
         public abstract isInWorkspace( xyz : core.LVec3 ) : boolean;
         public abstract includeInvKinEndEffectorOrientation() : boolean;
 

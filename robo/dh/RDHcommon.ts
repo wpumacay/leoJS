@@ -41,6 +41,7 @@ namespace leojs
 
         private m_minJointValue : number;
         private m_maxJointValue : number;
+        private m_rangeJointValue : number;
 
         constructor( pFixed : boolean[],
                      pValues : number[],
@@ -63,6 +64,7 @@ namespace leojs
 
             this.m_minJointValue = pMinJointValue;
             this.m_maxJointValue = pMaxJointValue;
+            this.m_rangeJointValue = pMaxJointValue - pMinJointValue;
 
             this._updateTransform();
         }
@@ -71,6 +73,7 @@ namespace leojs
         public values() : number[] { return this.m_values; }
         public minJointValue() : number { return this.m_minJointValue; }
         public maxJointValue() : number { return this.m_maxJointValue; }
+        public rangeJointValue() : number { return this.m_rangeJointValue; }
 
         public setParamValue( value : number, indx : DHparams )
         {
@@ -264,6 +267,19 @@ namespace leojs
             let _entry : RDHentry = this.m_entries[ indx ];
 
             return _entry.maxJointValue();
+        }
+
+        public getRangeJointValue( indx : number ) : number
+        {
+            if ( indx < 0 || indx >= this.m_entries.length )
+            {
+                console.error( 'RDHtable> Trying to set value for out of range indx ' + indx );
+                return 0;
+            }
+
+            let _entry : RDHentry = this.m_entries[ indx ];
+
+            return _entry.rangeJointValue();
         }
 
         public getTransform( indx : number ) : core.LMat4

@@ -226,7 +226,8 @@ namespace leojs
                                                                   sldElement.name(),
                                                                   sldElement.min(),
                                                                   sldElement.max() );
-            _controller.step( Math.PI / 180.0 );
+            _controller.setValue( sldElement.current() );
+            _controller.step( 0.001 );
             if ( sldElement.onChangeCallback() )
             {
                 _controller.onChange( sldElement.onChangeCallback() );
@@ -331,14 +332,17 @@ namespace leojs
             if ( this.m_dhModel.includeInvKinEndEffectorOrientation() )
             {
                 // Allow the GUI to control the end effector orientation
-                _fInverseKinematics.addChild( new RUIslider( 'ik_r',
-                                                             -Math.PI, Math.PI, 0,
+                _fInverseKinematics.addChild( new RUIslider( 'ik_roll',
+                                                             -Math.PI, Math.PI,
+                                                             this.m_dhModel.rpyZeroPosition().x,
                                                              () => { _self.doInverseKinematics(); } ) )
-                _fInverseKinematics.addChild( new RUIslider( 'ik_p',
-                                                             -Math.PI, Math.PI, 0,
+                _fInverseKinematics.addChild( new RUIslider( 'ik_pitch',
+                                                             -Math.PI, Math.PI, 
+                                                             this.m_dhModel.rpyZeroPosition().y,
                                                              () => { _self.doInverseKinematics(); } ) )
-                _fInverseKinematics.addChild( new RUIslider( 'ik_y',
-                                                             -Math.PI, Math.PI, 0,
+                _fInverseKinematics.addChild( new RUIslider( 'ik_yaw',
+                                                             -Math.PI, Math.PI, 
+                                                             this.m_dhModel.rpyZeroPosition().z,
                                                              () => { _self.doInverseKinematics(); } ) )
             }
             // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
@@ -398,9 +402,9 @@ namespace leojs
 
             if ( this.m_dhModel.includeInvKinEndEffectorOrientation() )
             {
-                let _rollSlider  = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_r' );
-                let _pitchSlider = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_p' );
-                let _yawSlider   = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_y' );
+                let _rollSlider  = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_roll' );
+                let _pitchSlider = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_pitch' );
+                let _yawSlider   = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_yaw' );
 
                 _rpy.x = parseFloat( _rollSlider.controller().getValue() );
                 _rpy.y = parseFloat( _pitchSlider.controller().getValue() );

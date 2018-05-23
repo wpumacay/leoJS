@@ -29,8 +29,6 @@ namespace leojs
         {
             super( world );
 
-            this.m_eeOffset = new core.LVec3( 0, 0, 0 );
-
             this.m_ikEEPosRef = new core.LVec3( 0, 0, 0 );
             this.m_ikWCPosRef = new core.LVec3( 0, 0, 0 );
 
@@ -81,16 +79,52 @@ namespace leojs
 
         protected _computeEndEffectorOffset() : void
         {
-            this.m_eeOffset = new core.LVec3( 0, 0, 0.193 + 0.0375 );
-            this.m_endEffectorOffset = core.LMat4.translation( this.m_eeOffset );
+            this.m_eeOffset = new core.LVec3( 0, 0, 0.193 + 0.0375 + 0.2 );
+            this.m_endEffectorCompensation = core.LMat4.translation( this.m_eeOffset );
+            this.m_endEffectorCompensation = core.mulMatMat44( this.m_endEffectorCompensation,
+                                                               core.ROT_Y_90 );
         }
 
         protected _computeMinMaxEstimates() : void
         {
-            // TODO: Implement this part
+            // // Do a quick scan through the joints valid space
+            // let _xyzMin = new core.LVec3( 1000000, 1000000, 1000000 );
+            // let _xyzMax = new core.LVec3( -1000000, -1000000, -1000000 );
+
+            // for ( let i = 0; i < 100; i++ )
+            // {
+            //     let _q1 = this.m_dhTable.getMinJointValue( 0 ) +
+            //               this.m_dhTable.getRangeJointValue( 0 ) * ( i / 100.0 );
+            //     for ( let j = 0; j < 100; j++ )
+            //     {
+            //         let _q2 = this.m_dhTable.getMinJointValue( 1 ) +
+            //                   this.m_dhTable.getRangeJointValue( 1 ) * ( j / 100.0 );
+            //         for ( let k = 0; k < 100; k++ )
+            //         {
+            //             let _q3 = this.m_dhTable.getMinJointValue( 2 ) +
+            //                       this.m_dhTable.getRangeJointValue( 2 ) * ( k / 100.0 );
+
+            //             let _xyz = this.forward( [ _q1, _q2, _q3, 0, 0, 0 ] );
+
+            //             _xyzMin.x = Math.min( _xyz.x, _xyzMin.x );
+            //             _xyzMin.y = Math.min( _xyz.y, _xyzMin.y );
+            //             _xyzMin.z = Math.min( _xyz.z, _xyzMin.z );
+
+            //             _xyzMax.x = Math.max( _xyz.x, _xyzMax.x );
+            //             _xyzMax.y = Math.max( _xyz.y, _xyzMax.y );
+            //             _xyzMax.z = Math.max( _xyz.z, _xyzMax.z );
+            //         }
+            //     }
+            // }
+
+            // this.m_xyzMinEstimate = _xyzMin;
+            // this.m_xyzMaxEstimate = _xyzMax;
+
+            this.m_xyzMinEstimate = new core.LVec3( -3.1, -3.1, -2.0 );
+            this.m_xyzMaxEstimate = new core.LVec3( 3.1, 3.1, 3.5 );
         }
 
-        public inverse( xyz : core.LVec3, rpy : core.LVec3 ) : void
+        public inverse( xyz : core.LVec3, rpy : core.LVec3 ) : number[]
         {
             let _q1, _q2, _q3, _q4, _q5, _q6 : number;
 
@@ -146,7 +180,7 @@ namespace leojs
             _l1 = Math.sqrt( _d1 * _d1 + _a1 * _a1 );
             _l2 = this.m_ikWCPosRef.length();
 
-            _l3 = _l1 * _l1 + _l2 * _l2 - 2 * _l1 * _l2 * Math.cos( _phi3 );
+            _l3 = Math.sqrt( _l1 * _l1 + _l2 * _l2 - 2 * _l1 * _l2 * Math.cos( _phi3 ) );
             _phi5 = Math.acos( ( _l1 * _l1 + _l3 * _l3 - _l2 * _l2 ) / 
                                ( 2 * _l1 * _l3 ) );
 
@@ -161,7 +195,7 @@ namespace leojs
                                ( 2 * _a2 * _l4 ) );
 
             // Compute q2 and q3 with some angles' sums
-            _q2 = 2 * Math.PI - _phi4 - _phi5 - _phi6;
+            _q2 = 1.5 * Math.PI - _phi4 - _phi5 - _phi6;
             _q3 = 0.5 * Math.PI - _phi7 - _phi8;
 
             //////// Compute q4, q5 and q6 from the total rotation matrix
@@ -210,19 +244,66 @@ namespace leojs
                 if ( !isFinite( _joints[i] ) ||
                      isNaN( _joints[i] ) )
                 {
-                    return;
+                    return null;
                 }
 
                 this.m_dhTable.setJointValue( _joints[i], i );
             }
 
             this.m_dhTable.update( 0 );
+
+            return _joints;
         }
 
         public isInWorkspace( xyz : core.LVec3 ) : boolean
         {
             // TODO: Implement this part
             return false;
+        }
+
+        public update( dt : number ) : void
+        {
+            super.update( dt );
+
+            let _test = true;
+
+            if ( _test )
+            {
+                // Copy the EEffector position
+                core.LVec3.copy( this.m_ikEEPosRef, this.m_endEffector.position );
+                // Compute rotation matrix of the end effector
+                core.LMat4.fromEulerInPlace( this.m_ikEErotMat, this.m_endEffector.rotation );
+
+                // Compute wrist orientation - last frame
+                core.mulMatMat44InPlace( this.m_ikWCrotMat,
+                                         this.m_ikEErotMat,
+                                         this.m_ikEEtoWCinvrot );
+
+                // Compute wrist position - last frame
+                // From : r_ee = r_wc + R_0_6 * [ 0, 0, d_ee ]
+                this.m_ikWCPosRef.x = this.m_ikEEPosRef.x -
+                                        ( this.m_ikWCrotMat.buff[0] * this.m_eeOffset.x +
+                                          this.m_ikWCrotMat.buff[4] * this.m_eeOffset.y +
+                                          this.m_ikWCrotMat.buff[8] * this.m_eeOffset.z );
+
+                this.m_ikWCPosRef.y = this.m_ikEEPosRef.y -
+                                        ( this.m_ikWCrotMat.buff[1] * this.m_eeOffset.x +
+                                          this.m_ikWCrotMat.buff[5] * this.m_eeOffset.y +
+                                          this.m_ikWCrotMat.buff[9] * this.m_eeOffset.z );
+
+                this.m_ikWCPosRef.z = this.m_ikEEPosRef.z -
+                                        ( this.m_ikWCrotMat.buff[2] * this.m_eeOffset.x +
+                                          this.m_ikWCrotMat.buff[6] * this.m_eeOffset.y +
+                                          this.m_ikWCrotMat.buff[10] * this.m_eeOffset.z );
+
+                engine3d.DebugSystem.drawLine( core.ORIGIN,
+                                               this.m_ikEEPosRef,
+                                               core.YELLOW );
+
+                engine3d.DebugSystem.drawLine( core.ORIGIN,
+                                               this.m_ikWCPosRef,
+                                               core.MAGENTA );
+            }
         }
     }
 

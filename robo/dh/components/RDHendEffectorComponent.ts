@@ -96,9 +96,6 @@ namespace leojs
                                             this.m_parent.position,
                                             this.m_parent.rotation );
 
-            this.m_transformBase = core.mulMatMat44( this.m_transformBase,
-                                                     core.ROT_Y_90 );
-
             // Apply relative transform to left and right gripper parts
             this.m_leftGripTotalTransform = core.mulMatMat44( this.m_transformBase,
                                                               this.m_leftGripTotalTransformToRoot );

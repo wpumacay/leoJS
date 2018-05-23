@@ -42,9 +42,9 @@ namespace leojs
         protected _computeEndEffectorOffset() : void
         {
             let _effOffset : core.LVec3 = new core.LVec3( 0, 0, -0.5 );
-            this.m_endEffectorOffset = core.LMat4.translation( _effOffset );
-            this.m_endEffectorOffset = core.mulMatMat44( this.m_endEffectorOffset,
-                                                         core.ROT_Y_180 );
+            this.m_endEffectorCompensation = core.LMat4.translation( _effOffset );
+            this.m_endEffectorCompensation = core.mulMatMat44( this.m_endEffectorCompensation,
+                                                               core.ROT_Y_NEG_90 );
         }
 
         protected _computeMinMaxEstimates() : void
@@ -82,7 +82,7 @@ namespace leojs
             this.m_xyzMaxEstimate.y = l3 + l2;
         }
 
-        public inverse( xyz : core.LVec3, rpy : core.LVec3 ) : void
+        public inverse( xyz : core.LVec3, rpy : core.LVec3 ) : number[]
         {
             if ( !this.isInWorkspace( xyz ) )
             {
@@ -169,13 +169,15 @@ namespace leojs
                 if ( !isFinite( _joints[i] ) ||
                      isNaN( _joints[i] ) )
                 {
-                    return;
+                    return null;
                 }
 
                 this.m_dhTable.setJointValue( _joints[i], i );
             }
 
             this.m_dhTable.update( 0 );
+
+            return _joints;
         }    
 
         public isInWorkspace( xyz : core.LVec3 ) : boolean
