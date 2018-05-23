@@ -32,6 +32,13 @@ namespace leojs
                                                       -Math.PI, Math.PI ) );
         }
 
+        public includeInvKinEndEffectorOrientation() : boolean
+        {
+            // Don't use the end effector rotation in IK solver. Just assume ...
+            // the same orientation as in not that necessary
+            return false;
+        }
+
         protected _computeEndEffectorOffset() : void
         {
             let _effOffset : core.LVec3 = new core.LVec3( 0, 0, -0.5 );
@@ -75,7 +82,7 @@ namespace leojs
             this.m_xyzMaxEstimate.y = l3 + l2;
         }
 
-        public inverse( xyz : core.LVec3 ) : void
+        public inverse( xyz : core.LVec3, rpy : core.LVec3 ) : void
         {
             if ( !this.isInWorkspace( xyz ) )
             {

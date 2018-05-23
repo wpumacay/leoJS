@@ -206,8 +206,9 @@ namespace leojs
             this.m_dhTable.update( 0 );
         }
 
-        public abstract inverse( xyz : core.LVec3 ) : void;
+        public abstract inverse( xyz : core.LVec3, rpy : core.LVec3 ) : void;
         public abstract isInWorkspace( xyz : core.LVec3 ) : boolean;
+        public abstract includeInvKinEndEffectorOrientation() : boolean;
 
         public update( dt : number ) : void
         {

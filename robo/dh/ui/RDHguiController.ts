@@ -327,6 +327,20 @@ namespace leojs
                                                          this.m_dhModel.xyzMaxEstimate().z, 
                                                          this.m_dhModel.xyzZeroPosition().z, 
                                                          () => { _self.doInverseKinematics(); } ) );
+
+            if ( this.m_dhModel.includeInvKinEndEffectorOrientation() )
+            {
+                // Allow the GUI to control the end effector orientation
+                _fInverseKinematics.addChild( new RUIslider( 'ik_r',
+                                                             -Math.PI, Math.PI, 0,
+                                                             () => { _self.doInverseKinematics(); } ) )
+                _fInverseKinematics.addChild( new RUIslider( 'ik_p',
+                                                             -Math.PI, Math.PI, 0,
+                                                             () => { _self.doInverseKinematics(); } ) )
+                _fInverseKinematics.addChild( new RUIslider( 'ik_y',
+                                                             -Math.PI, Math.PI, 0,
+                                                             () => { _self.doInverseKinematics(); } ) )
+            }
             // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
             this.m_uiWrapper.appendUIelement( _fInverseKinematics );
             // ******************************************************************
@@ -380,7 +394,20 @@ namespace leojs
             _xyz.y = parseFloat( _ySlider.controller().getValue() );
             _xyz.z = parseFloat( _zSlider.controller().getValue() );
 
-            this.m_dhModel.inverse( _xyz );
+            let _rpy : core.LVec3 = new core.LVec3( 0, 0, 0 );
+
+            if ( this.m_dhModel.includeInvKinEndEffectorOrientation() )
+            {
+                let _rollSlider  = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_r' );
+                let _pitchSlider = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_p' );
+                let _yawSlider   = <RUIslider> this.m_uiWrapper.getElementByName( 'ik_y' );
+
+                _rpy.x = parseFloat( _rollSlider.controller().getValue() );
+                _rpy.y = parseFloat( _pitchSlider.controller().getValue() );
+                _rpy.z = parseFloat( _yawSlider.controller().getValue() );
+            }
+
+            this.m_dhModel.inverse( _xyz, _rpy );
         }
 
         public update( dt : number ) : void
