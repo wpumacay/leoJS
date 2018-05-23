@@ -297,9 +297,12 @@ namespace leojs
                                                              _entries[q].maxJointValue(),
                                                               0, () => { _self.doForwardKinematics(); } ) );
             }
-            _fForwardKinematics.addChild( new RUItext( 'fk_x', '0' ) );
-            _fForwardKinematics.addChild( new RUItext( 'fk_y', '0' ) );
-            _fForwardKinematics.addChild( new RUItext( 'fk_z', '0' ) );
+            _fForwardKinematics.addChild( new RUItext( 'fk_x', '' + this.m_dhModel.xyzZeroPosition().x ) );
+            _fForwardKinematics.addChild( new RUItext( 'fk_y', '' + this.m_dhModel.xyzZeroPosition().y ) );
+            _fForwardKinematics.addChild( new RUItext( 'fk_z', '' + this.m_dhModel.xyzZeroPosition().z ) );
+            _fForwardKinematics.addChild( new RUItext( 'fk_roll', '' + this.m_dhModel.rpyZeroPosition().x ) );
+            _fForwardKinematics.addChild( new RUItext( 'fk_pitch', '' + this.m_dhModel.rpyZeroPosition().y ) );
+            _fForwardKinematics.addChild( new RUItext( 'fk_yaw', '' + this.m_dhModel.rpyZeroPosition().z ) );
             // _fForwardKinematics.addChild( new RUIbutton( 'compute FK', () => { _self.doForwardKinematics(); } ) );
             this.m_uiWrapper.appendUIelement( _fForwardKinematics );
             // ******************************************************************
@@ -423,15 +426,23 @@ namespace leojs
         private _updateFKvalues() : void
         {
             let _xyz : core.LVec3 = this.m_dhTable.getEndEffectorXYZ();
-            // Update xyz text UI elements
+            let _rpy : core.LVec3 = this.m_dhTable.getEndEffectorRPY();
+            // Update xyz and rpy text UI elements
 
             let _xText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'fk_x' );
             let _yText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'fk_y' );
             let _zText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'fk_z' );
+            let _rollText : RUItext  = <RUItext> this.m_uiWrapper.getElementByName( 'fk_roll' );
+            let _pitchText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'fk_pitch' );
+            let _yawText : RUItext   = <RUItext> this.m_uiWrapper.getElementByName( 'fk_yaw' );
 
             _xText.controller().setValue( '' + _xyz.x );
             _yText.controller().setValue( '' + _xyz.y );
             _zText.controller().setValue( '' + _xyz.z );
+
+            _rollText.controller().setValue( '' + _rpy.x );
+            _pitchText.controller().setValue( '' + _rpy.y );
+            _yawText.controller().setValue( '' + _rpy.z );
         }
 
         private _updateIKvalues() : void

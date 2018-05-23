@@ -165,12 +165,14 @@ namespace leojs
         private m_entries : RDHentry[];
         private m_totalTransform : core.LMat4;
         private m_xyz : core.LVec3;
+        private m_rpy : core.LVec3;
 
         constructor()
         {
             this.m_entries = [];
             this.m_totalTransform = new core.LMat4();
             this.m_xyz = new core.LVec3( 0, 0, 0 );
+            this.m_rpy = new core.LVec3( 0, 0, 0 );
         }
 
         public appendEntry( entry : RDHentry ) : void
@@ -320,6 +322,7 @@ namespace leojs
         public entries() : RDHentry[] { return this.m_entries; }
         public getFullTransform() : core.LMat4 { return this.m_totalTransform; }
         public getEndEffectorXYZ() : core.LVec3 { return this.m_xyz; }
+        public getEndEffectorRPY() : core.LVec3 { return this.m_rpy; }
         public getAllJointValues() : number[]
         {
             let _jointValues : number[] = [];
@@ -336,6 +339,7 @@ namespace leojs
         {
             this.m_totalTransform = this._getTotalTransform();
             core.LMat4.extractPositionInPlace( this.m_xyz, this.m_totalTransform );
+            core.LMat4.extractEulerFromRotationInPlace( this.m_rpy, this.m_totalTransform );
         }
     }
 
