@@ -51,20 +51,20 @@ namespace leojs
         {
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ 0, 0, 0.75, 0 ],
-                                                      -Math.PI, Math.PI ) );
+                                                      core.radians( -185 ) , core.radians( 185 ) ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ -0.5 * Math.PI, 0.35, 0, 0 ],
-                                                      -Math.PI, Math.PI,
+                                                      core.radians( -45 ), core.radians( 85 ),
                                                       1, -0.5 * Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ 0, 1.25, 0, 0 ],
-                                                      -Math.PI, Math.PI ) );
+                                                      core.radians( -210 ), core.radians( 155 - 90 ) ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ -0.5 * Math.PI, -0.054, 1.5, 0 ],
                                                       -Math.PI, Math.PI ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ 0.5 * Math.PI, 0, 0, 0 ],
-                                                      -Math.PI, Math.PI ) );
+                                                      core.radians( -125 ), core.radians( 125 ) ) );
             this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
                                                       [ -0.5 * Math.PI, 0, 0, 0 ],
                                                       -Math.PI, Math.PI ) );
@@ -79,7 +79,7 @@ namespace leojs
 
         protected _computeEndEffectorOffset() : void
         {
-            this.m_eeOffset = new core.LVec3( 0, 0, 0.193 + 0.0375 + 0.2 );
+            this.m_eeOffset = new core.LVec3( 0, 0, 0.193 + 0.11 );
             this.m_endEffectorCompensation = core.LMat4.translation( this.m_eeOffset );
             this.m_endEffectorCompensation = core.mulMatMat44( this.m_endEffectorCompensation,
                                                                core.ROT_Y_90 );
@@ -195,8 +195,17 @@ namespace leojs
                                ( 2 * _a2 * _l4 ) );
 
             // Compute q2 and q3 with some angles' sums
-            _q2 = 1.5 * Math.PI - _phi4 - _phi5 - _phi6;
-            _q3 = 0.5 * Math.PI - _phi7 - _phi8;
+            if ( _phi3 >= 0 )
+            {
+                _q2 = 1.5 * Math.PI - _phi4 - _phi5 - _phi6;
+                _q3 = 0.5 * Math.PI - _phi7 - _phi8;
+            }
+            else
+            {
+                _q2 = _phi5 - _phi6 - _phi4 - 0.5 * Math.PI;
+                _q3 = 0.5 * Math.PI - _phi7 - _phi8;
+            }
+
 
             //////// Compute q4, q5 and q6 from the total rotation matrix
             //// Compute R_3_6 ( rotation matrix of frame 6 respect to 3 ) ...

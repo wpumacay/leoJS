@@ -236,6 +236,26 @@ namespace leojs
 
         public getDHtable() : RDHtable { return this.m_dhTable; }
 
+        public getEndEffectorXYZ() : core.LVec3
+        {
+            let _pos : core.LVec3 = new core.LVec3( 0, 0, 0 );
+
+            core.LMat4.extractPositionInPlace( _pos,
+                                               this.m_endEffectorTotalTransform );
+
+            return _pos;
+        }
+
+        public getEndEffectorRPY() : core.LVec3
+        {
+            let _rpy : core.LVec3 = new core.LVec3( 0 ,0, 0 );
+
+            core.LMat4.extractEulerFromRotationInPlace( _rpy,
+                                                        this.m_endEffectorTotalTransform );
+
+            return _rpy;
+        }
+
     }
 
 

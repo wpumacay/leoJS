@@ -425,8 +425,8 @@ namespace leojs
 
         private _updateFKvalues() : void
         {
-            let _xyz : core.LVec3 = this.m_dhTable.getEndEffectorXYZ();
-            let _rpy : core.LVec3 = this.m_dhTable.getEndEffectorRPY();
+            let _xyz : core.LVec3 = this.m_dhModel.getEndEffectorXYZ();
+            let _rpy : core.LVec3 = this.m_dhModel.getEndEffectorRPY();
             // Update xyz and rpy text UI elements
 
             let _xText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'fk_x' );
