@@ -23,5 +23,11 @@ namespace leojs
 
     export const Models : core.LModelInfo[] =
     [
+    
+    ];
+
+    export const TextAssets : core.LTextAssetInfo[] = 
+    [
+
     ];
 }

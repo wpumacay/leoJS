@@ -45,8 +45,13 @@ namespace leojs
 
             let _textures : core.LTextureAssetInfo[] = leojs.Textures.concat( assets.Textures );
             let _shaders : core.LShaderAssetInfo[] = leojs.Shaders.concat( assets.Shaders );
+            let _models : core.LModelInfo[] = leojs.Models.concat( assets.Models );
+            let _textAssets : core.LTextAssetInfo[] = leojs.TextAssets.concat( assets.TextAssets );
 
-            let _appData : core.LApplicationData = new core.LApplicationData( _textures, _shaders );
+            let _appData : core.LApplicationData = new core.LApplicationData( _textures, 
+                                                                              _shaders, 
+                                                                              _models, 
+                                                                              _textAssets );
             this.m_gApp = new core.LApplication( this.m_canvas,  this.m_gl, 
                                                  _appData, this._onInit, this._onUpdate );
             this.m_gApp.addUserResizeCallback( this._onResize );

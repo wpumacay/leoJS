@@ -110,6 +110,7 @@ class RBuilder :
         sp.call( ['cp', '-r', 'ext/cat1js/res/imgs', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
         sp.call( ['cp', '-r', 'ext/cat1js/res/models', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
         sp.call( ['cp', '-r', 'ext/cat1js/res/shaders', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
+        sp.call( ['cp', '-r', 'ext/cat1js/res/text', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
 
     def _run( self ) :
         # run using simplehttpserver
