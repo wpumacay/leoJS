@@ -50,6 +50,7 @@ namespace leojs
         {
             let _rkinGeometry : RKinNodeGeometry = new RKinNodeGeometry();
 
+            // TODO: Make geometry!!!
 
             return _rkinGeometry;
         }
@@ -86,15 +87,18 @@ namespace leojs
         public getGeometry() : RKinNodeGeometry { return this.m_geometry; }
         public getLocalTransform() : core.LMat4 { return this.m_localTransform; }
         public getWorldTransform() : core.LMat4 { return this.m_worldTransform; }
+        public getId () : string { return this.m_id; }
+        public getJoints() : RKinJoint[] { return this.m_joints; }
 
-        public addJointConnection() : void
+        public addJointConnection( joint : RKinJoint ) : void
         {
-            // Called after the joints of the tree have been created
+            this.m_joints.push( joint );
         }
 
         public updateNode() : void
         {
             // Called recursively to update the nodes in the tree
+            // TODO: Implement this part recursively
         }
     }
 
@@ -109,29 +113,37 @@ namespace leojs
         private m_xyz : core.LVec3;
         private m_rpy : core.LVec3;
         private m_axis : core.LVec3;
-        private m_jointValue : core.LVec3;
+        private m_jointValue : number;
         private m_jointType : string;
         private m_jointTransform : core.LMat4;
 
         constructor( jointId : string )
         {
             this.m_id = jointId;
-            this.m_jointTransform = new core.LMat4();
             this.m_parent = null;
             this.m_parentId = '';
             this.m_child = null;
             this.m_childId = '';
+
+            this.m_xyz = new core.LVec3( 0, 0, 0 );
+            this.m_rpy = new core.LVec3( 0, 0, 0 );
+            this.m_axis = new core.LVec3( 0, 0, 0 );
+            this.m_jointValue = 0;
+            this.m_jointType = RKinJointTypeFixed;
+            this.m_jointTransform = new core.LMat4();
         }
 
         public initJoint( jxyz : core.LVec3, 
                           jrpy : core.LVec3,
                           axis : core.LVec3,
+                          type : string,
                           parentId : string, 
                           childId : string ) : void
         {
             this.m_xyz = jxyz;
             this.m_rpy = jrpy;
             this.m_axis = axis;
+            this.m_jointType = type;
 
             this.m_parentId = parentId;
             this.m_childId = childId;
@@ -139,6 +151,14 @@ namespace leojs
 
         public getParentId() : string { return this.m_parentId; }
         public getChildId() : string { return this.m_childId; }
+        public getId () : string { return this.m_id; }
+        public getParentNode() : RKinNode { return this.m_parent; }
+        public getChildNode() : RKinNode { return this.m_child; }
+        public getJointTransform() : core.LMat4 { return this.m_jointTransform; }
+        public getJointType() : string { return this.m_jointType; }
+        public getJointAxis() : core.LVec3 { return this.m_axis; }
+        public getJointXYZ() : core.LVec3 { return this.m_xyz; }
+        public getJointRPY() : core.LVec3 { return this.m_rpy; }
 
         public connect( parentNode : RKinNode,
                         childNode : RKinNode )
@@ -149,28 +169,76 @@ namespace leojs
 
         public setJointValue( jointValue : number ) : void
         {
-
+            this.m_jointValue = jointValue;
         }
+        public getJointValue() : number
+        {
+            return this.m_jointValue;
+        }
+
+        public updateJoint() : void
+        {
+            // Update the joint ransform here
+            // TODO: Implement this part
+        }
+
     }
 
     export class RKinTree
     {
-        private m_kinNodes : RKinNode[];
-        private m_kinJoints : RKinJoint[];
+        private m_kinNodes : { [id:string] : RKinNode };
+        private m_kinJoints : { [id:string] : RKinJoint };
         private m_rootNode : RKinNode;
 
         constructor()
         {
             this.m_rootNode = null;
-            this.m_kinNodes = [];
-            this.m_kinJoints = [];
+            this.m_kinNodes = {};
+            this.m_kinJoints = {};
         }
 
-        public setRootNode( node : RKinNode ) { this.m_rootNode = node; }
-        public addKinNode( node : RKinNode ) { this.m_kinNodes.push( node ); }
+        public setRootNode( node : RKinNode ) 
+        { 
+            if ( this.m_rootNode )
+            {
+                console.warn( 'RKinTree> changing the root node ' +
+                              'from an already set one' );
+            }
+            this.m_rootNode = node; 
+        }
+        public addKinNode( node : RKinNode ) 
+        { 
+            if ( this.m_kinNodes[ node.getId() ] )
+            {
+                console.warn( 'RKinTree> a node with id: ' +
+                              node.getId() + ' already exists ' +
+                              'in the tree. Skipping new one' );
+                return;
+            }
+            this.m_kinNodes[ node.getId() ] = node; 
+        }
+        public addKinJoint( joint : RKinJoint ) 
+        { 
+            if ( this.m_kinJoints[ joint.getId() ] )
+            {
+                console.warn( 'RKinTree> a joint with id: ' +
+                              joint.getId() + ' already exists ' +
+                              'in the tree. Skipping new one' );
+                return;
+            }
+            this.m_kinJoints[ joint.getId() ] = joint; 
+        }
 
         public update() : void
         {
+            // Update all the nodes so that ...
+            // they update their transforms
+            for ( let _jointId in this.m_kinJoints )
+            {
+                this.m_kinJoints[ _jointId ].updateJoint();
+            }
+
+            // Traverse the tree accordingly
             if ( this.m_rootNode )
             {
                 this.m_rootNode.updateNode();

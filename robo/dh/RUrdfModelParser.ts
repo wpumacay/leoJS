@@ -136,7 +136,7 @@ namespace leojs
             // Assemble the guy
             let _kinTree = this._makeKinTree( _links, _joints );
 
-            return null;
+            return _kinTree;
         }
 
         private _parseLinks( rootElement : HTMLElement ) : { [id:string] : RUrdfLink }
@@ -275,6 +275,7 @@ namespace leojs
             this._parseJointOrigin( _joint, jointElm );
             this._parseJointConnection( _joint, jointElm );
             this._parseJointAxis( _joint, jointElm );
+            this._parseJointType( _joint, jointElm );
 
             return _joint;
         }
@@ -323,6 +324,27 @@ namespace leojs
             {
                 console.info( 'RUrdfModelParser> this joint does not use an axis' );
             }
+        }
+
+        private _parseJointType( joint : RUrdfJoint, jointElm : Element ) : void
+        {
+            let _jointTypeStr : string = jointElm.getAttribute( 'type' );
+            if ( !_jointTypeStr || _jointTypeStr == '' )
+            {
+                _jointTypeStr = RKinJointTypeFixed;
+            }
+
+            if ( _jointTypeStr != RKinJointTypeFixed &&
+                 _jointTypeStr != RKinJointTYpePrismatic &&
+                 _jointTypeStr != RKinJointTypeRevolute )
+            {
+                console.warn( 'RUrdfModelParser> joint with a not' + 
+                              ' correctly type: ' + _jointTypeStr +
+                              '. Using _fixed_ as default' );
+                _jointTypeStr = RKinJointTypeFixed;
+            }
+
+            joint.type = _jointTypeStr;
         }
 
         private _makeKinTree( links : { [id:string] : RUrdfLink },
@@ -393,9 +415,9 @@ namespace leojs
             return _rootLink;
         }
 
-        private _makeKinNodes( links : { [id:string] : RUrdfLink } ) : RKinNode[]
+        private _makeKinNodes( links : { [id:string] : RUrdfLink } ) : { [id:string] : RKinNode }
         {
-            let _kinNodes : RKinNode[] = [];
+            let _kinNodes : { [id:string] : RKinNode } = {};
 
             for ( let _key in links )
             {
@@ -405,35 +427,65 @@ namespace leojs
                 _kinNode.initNode( _link.xyz, _link.rpy, 
                                    _link.geometry.toDictProperties() );
 
-                _kinNodes.push( _kinNode );
+                _kinNodes[ _kinNode.getId() ] = _kinNode;
             }
 
             return _kinNodes;
         }
 
-        private _makeKinJoints( joints : { [id:string] : RUrdfJoint } ) : RKinJoint[]
+        private _makeKinJoints( joints : { [id:string] : RUrdfJoint } ) : { [id:string] : RKinJoint }
         {
-            let _kinJoints : RKinJoint[] = [];
+            let _kinJoints : { [id:string] : RKinJoint } = {};
 
             for ( let _key in joints )
             {
                 let _joint = joints[ _key ];
 
                 let _kinJoint = new RKinJoint( _joint.id );
-                _kinJoint.initJoint( _joint.xyz, _joint.rpy, _joint.axis,
+                _kinJoint.initJoint( _joint.xyz, _joint.rpy, 
+                                     _joint.axis, _joint.type,
                                      _joint.parentId, _joint.childId );
 
-                _kinJoints.push( _kinJoint );
+                _kinJoints[ _kinJoint.getId() ] = _kinJoint;
             }
 
             return _kinJoints;
         }
 
         private _assembleKinTree( kinTree : RKinTree, 
-                                  kinNodes : RKinNode[],
-                                  kinJoints : RKinJoint[] )
+                                  kinNodes : { [id:string] : RKinNode },
+                                  kinJoints : { [id:string] : RKinJoint } )
         {
+            // First, populate with the corresponding connections
+            for ( let _key in kinJoints )
+            {
+                let _parentId = kinJoints[ _key ].getParentId();
+                let _childId  = kinJoints[ _key ].getChildId();
 
+                if ( !kinNodes[ _parentId ] ||
+                     !kinNodes[ _childId ] )
+                {
+                    console.warn( 'RUrdfModelParser> there is a joint that ' +
+                                  'connects non existent nodes: ' +
+                                  'child= ' + _childId + ' - parent= ' + _parentId );
+                    continue;
+                }
+
+                // Make joint connection
+                kinJoints[ _key ].connect( kinNodes[ _parentId ], kinNodes[ _childId ] );
+                // Add joint connection to the parent node
+                kinNodes[ _parentId ].addJointConnection( kinJoints[ _key ] );
+            }
+
+            // Add them all
+            for ( let _jointId in kinJoints )
+            {
+                kinTree.addKinJoint( kinJoints[ _jointId ] );
+            }
+            for ( let _nodeId in kinNodes )
+            {
+                kinTree.addKinNode( kinNodes[ _nodeId ] );
+            }
         }
 
         // Some helpers
