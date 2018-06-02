@@ -45,10 +45,15 @@ namespace leojs
 
             this.m_scene.addCamera( _camera );
 
-            let _light : engine3d.LDirectionalLight = new engine3d.LDirectionalLight( new core.LVec3( 0.0, -1.0, -1.0 ),
-                                                                                      new core.LVec3( 0.2, 0.2, 0.2 ),
-                                                                                      new core.LVec3( 0.5, 0.5, 0.5 ),
-                                                                                      new core.LVec3( 0.5, 0.5, 0.5 ) );
+            let _light : engine3d.LPointLight = new engine3d.LPointLight( new core.LVec3( 0.0, 3.0, 0.0 ),
+                                                                          new core.LVec3( 0.4, 0.4, 0.4 ),
+                                                                          new core.LVec3( 0.7, 0.7, 0.7 ),
+                                                                          new core.LVec3( 0.85, 0.85, 0.85 ) );
+
+            // let _light : engine3d.LDirectionalLight = new engine3d.LDirectionalLight( new core.LVec3( 0.0, -1.0, -1.0 ),
+            //                                                                           new core.LVec3( 0.2, 0.2, 0.2 ),
+            //                                                                           new core.LVec3( 0.5, 0.5, 0.5 ),
+            //                                                                           new core.LVec3( 0.5, 0.5, 0.5 ) );
 
             this.m_scene.addLight( _light );
         }
