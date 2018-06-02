@@ -475,6 +475,7 @@ namespace leojs
                 kinJoints[ _key ].connect( kinNodes[ _parentId ], kinNodes[ _childId ] );
                 // Add joint connection to the parent node
                 kinNodes[ _parentId ].addJointConnection( kinJoints[ _key ] );
+                kinNodes[ _childId ].setParentJointConnection( kinJoints[ _key ] );
             }
 
             // Add them all

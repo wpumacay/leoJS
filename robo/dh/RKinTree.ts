@@ -52,6 +52,17 @@ namespace leojs
 
             // TODO: Make geometry!!!
 
+            _rkinGeometry.b_width = geometryProperties['b_width'];
+            _rkinGeometry.b_height = geometryProperties['b_height'];
+            _rkinGeometry.b_depth = geometryProperties['b_depth'];
+
+            _rkinGeometry.c_radius = geometryProperties['c_radius'];
+            _rkinGeometry.c_length = geometryProperties['c_length'];
+
+            _rkinGeometry.s_radius = geometryProperties['s_radius'];
+
+            _rkinGeometry.m_meshId = geometryProperties['m_meshId'];
+
             return _rkinGeometry;
         }
 
@@ -60,17 +71,21 @@ namespace leojs
     export class RKinNode
     {
         private m_id : string;
-        private m_joints : RKinJoint[];
+        private m_parentJoint : RKinJoint;
+        private m_childrenJoints : RKinJoint[];
         private m_worldTransform : core.LMat4;
         private m_localTransform : core.LMat4;
+        private m_tmpTransform : core.LMat4;// For intermediate calculation
         private m_geometry : RKinNodeGeometry;
 
         constructor( nodeId : string )
         {
             this.m_id = nodeId;
-            this.m_joints = [];
+            this.m_parentJoint = null;
+            this.m_childrenJoints = [];
             this.m_localTransform = new core.LMat4();
             this.m_worldTransform = new core.LMat4();
+            this.m_tmpTransform = new core.LMat4();
             this.m_geometry = null;
         }
 
@@ -88,17 +103,43 @@ namespace leojs
         public getLocalTransform() : core.LMat4 { return this.m_localTransform; }
         public getWorldTransform() : core.LMat4 { return this.m_worldTransform; }
         public getId () : string { return this.m_id; }
-        public getJoints() : RKinJoint[] { return this.m_joints; }
+        public getChildrenJoints() : RKinJoint[] { return this.m_childrenJoints; }
+        public getParentJoint() : RKinJoint { return this.m_parentJoint; }
 
         public addJointConnection( joint : RKinJoint ) : void
         {
-            this.m_joints.push( joint );
+            this.m_childrenJoints.push( joint );
+        }
+        public setParentJointConnection( parentJoint : RKinJoint ) : void
+        {
+            this.m_parentJoint = parentJoint;
         }
 
         public updateNode() : void
         {
             // Called recursively to update the nodes in the tree
-            // TODO: Implement this part recursively
+            // Compute total tranform
+            if ( this.m_parentJoint != null )
+            {
+                core.mulMatMat44InPlace( this.m_tmpTransform,
+                                         this.m_parentJoint.getParentNode().getWorldTransform(),
+                                         this.m_parentJoint.getJointTransform() );
+            }
+            else
+            {
+                core.LMat4.setToIdentity( this.m_tmpTransform );
+            }
+
+            core.mulMatMat44InPlace( this.m_worldTransform,
+                                     this.m_tmpTransform,
+                                     this.m_localTransform );
+
+            // Update children recursively
+            for ( let q = 0; q < this.m_childrenJoints.length; q++ )
+            {
+                let _child = this.m_childrenJoints[q].getChildNode();
+                _child.updateNode();
+            }
         }
     }
 
@@ -115,6 +156,9 @@ namespace leojs
         private m_axis : core.LVec3;
         private m_jointValue : number;
         private m_jointType : string;
+
+        private m_jointBaseTransform : core.LMat4;
+        private m_jointVariableTransform : core.LMat4;
         private m_jointTransform : core.LMat4;
 
         constructor( jointId : string )
@@ -130,6 +174,9 @@ namespace leojs
             this.m_axis = new core.LVec3( 0, 0, 0 );
             this.m_jointValue = 0;
             this.m_jointType = RKinJointTypeFixed;
+
+            this.m_jointBaseTransform = new core.LMat4();
+            this.m_jointVariableTransform = new core.LMat4();
             this.m_jointTransform = new core.LMat4();
         }
 
@@ -147,6 +194,9 @@ namespace leojs
 
             this.m_parentId = parentId;
             this.m_childId = childId;
+
+            core.LMat4.fromPosEulerInPlace( this.m_jointBaseTransform,
+                                            this.m_xyz, this.m_rpy );
         }
 
         public getParentId() : string { return this.m_parentId; }
@@ -178,9 +228,24 @@ namespace leojs
 
         public updateJoint() : void
         {
-            // Update the joint ransform here
-            // TODO: Implement this part
+            // Update the joint variable transform ( 'transform around axis' )
+            if ( this.m_jointType == RKinJointTypeRevolute )
+            {
+                core.LMat4.rotationAroundAxisInPlace( this.m_jointVariableTransform,
+                                                      this.m_axis, this.m_jointValue );
+            }
+            else if ( this.m_jointType == RKinJointTYpePrismatic )
+            {
+                core.LMat4.translationAlongAxisInPlace( this.m_jointVariableTransform,
+                                                        this.m_axis, this.m_jointValue );
+            }
+
+            // Update the 'total' joint transform
+            core.mulMatMat44InPlace( this.m_jointTransform,
+                                     this.m_jointBaseTransform,
+                                     this.m_jointVariableTransform );
         }
+
 
     }
 
@@ -228,6 +293,9 @@ namespace leojs
             }
             this.m_kinJoints[ joint.getId() ] = joint; 
         }
+
+        public nodes() : { [id:string] : RKinNode } { return this.m_kinNodes; }
+        public joints() : { [id:string] : RKinJoint } { return this.m_kinJoints; }
 
         public update() : void
         {

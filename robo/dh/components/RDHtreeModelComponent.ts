@@ -12,7 +12,7 @@ namespace leojs
 
     export class RDHtreeModelComponent extends RGraphicsComponent
     {
-
+        private m_meshes : { [id:string] : engine3d.LMesh };
         private m_kinTree : RKinTree;
 
         constructor( parent : REntity,
@@ -20,6 +20,7 @@ namespace leojs
         {
             super( parent );
 
+            this.m_meshes = {};
             this.m_kinTree = kinTree;
 
             this._init();
@@ -32,10 +33,35 @@ namespace leojs
 
         private _initializeLinks()
         {
-            
+            // Generate links from kintree nodes' geometry
+            let _nodes = this.m_kinTree.nodes();
+            for ( let _nodeId in _nodes )
+            {
+                let _node = _nodes[ _nodeId ];
+                let _geometry = _node.getGeometry();
+
+                this.m_meshes[ _nodeId ] = this._createLinkFromGeometry( _geometry );
+            }
+        }
+        private _createLinkFromGeometry( geometry : RKinNodeGeometry ) : engine3d.LMesh
+        {
+
+
+            return null;
         }
 
+        public update( dt : number ) : void
+        {
+            super.update( dt );
 
+            // update transform from kintree
+            let _nodes = this.m_kinTree.nodes();
+            for ( let _nodeId in _nodes )
+            {
+                let _node = _nodes[ _nodeId ];
+                this.m_meshes[ _nodeId ].setWorldTransform( _node.getWorldTransform() );
+            }
+        }
 
     }
 
