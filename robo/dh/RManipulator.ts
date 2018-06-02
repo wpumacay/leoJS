@@ -39,6 +39,7 @@ namespace leojs
             {
                 this.m_treeModelRef = new RDHtreeModelComponent( this, 
                                                                  this.m_kinTree );
+                this.addComponent( this.m_treeModelRef );
             }
             else
             {

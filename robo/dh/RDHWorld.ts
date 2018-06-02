@@ -5,6 +5,7 @@
 /// <reference path="models/RDHmodelScara.ts" />
 /// <reference path="models/RDHmodelKukaKR210.ts" />
 /// <reference path="ui/RDHguiController.ts" />
+/// <reference path="RManipulator.ts" />
 
 namespace leojs
 {
@@ -22,6 +23,7 @@ namespace leojs
         private m_dhTable : RDHtable;
         private m_dhGuiController : RDHguiController;
         private m_robotId : RobotId;
+        private m_manipulatorRef : RManipulator;
 
         constructor( appWidth : number, appHeight : number,
                      robotId : RobotId )
@@ -32,6 +34,7 @@ namespace leojs
             this.m_dhTable = null;
             this.m_dhGuiController = null;
             this.m_robotId = robotId;
+            this.m_manipulatorRef = null;
 
             this._initializeModel();
             this._initializeUI();
@@ -42,12 +45,16 @@ namespace leojs
             if ( this.m_robotId == RobotId.SCARA )
             {
                 this.m_dhModel = new RDHmodelScara( this );
+                this.m_manipulatorRef = null;// TODO: Find a sexy scara urdf :3
             }
             else if ( this.m_robotId == RobotId.KUKA_KR210 )
             {
                 this.m_dhModel = new RDHmodelKukaKR210( this );
-            }
 
+                let _urdfData = core.LAssetsManager.INSTANCE.getTextAsset( 'kr210_urdf' );
+                this.m_manipulatorRef = new RManipulator( _urdfData );
+                this.addEntity( this.m_manipulatorRef );
+            }
         }
 
         private _initializeUI() : void

@@ -50,8 +50,6 @@ namespace leojs
         {
             let _rkinGeometry : RKinNodeGeometry = new RKinNodeGeometry();
 
-            // TODO: Make geometry!!!
-
             _rkinGeometry.b_width = geometryProperties['b_width'];
             _rkinGeometry.b_height = geometryProperties['b_height'];
             _rkinGeometry.b_depth = geometryProperties['b_depth'];
@@ -62,6 +60,8 @@ namespace leojs
             _rkinGeometry.s_radius = geometryProperties['s_radius'];
 
             _rkinGeometry.m_meshId = geometryProperties['m_meshId'];
+
+            _rkinGeometry.type = geometryProperties['type'];
 
             return _rkinGeometry;
         }

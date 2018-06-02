@@ -7,10 +7,11 @@ namespace leojs
 {
     export enum RUrdfGeometryType
     {
-        BOX = 0,
-        CYLINDER = 1,
-        SPHERE = 2,
-        MESH = 3
+        NONE = 'none',// TODO: Maybe change to plane, for grid root base
+        BOX = 'box',
+        CYLINDER = 'cylinder',
+        SPHERE = 'sphere',
+        MESH = 'mesh'
     }
 
     export class RUrdfLinkGeometry
@@ -31,7 +32,7 @@ namespace leojs
 
         constructor()
         {
-            this.type = RUrdfGeometryType.BOX;
+            this.type = RUrdfGeometryType.NONE;
 
             this.b_width = 1;
             this.b_height = 1;
@@ -59,6 +60,8 @@ namespace leojs
             _res['s_radius'] = this.s_radius;
 
             _res['m_meshId'] = this.m_meshId;
+
+            _res['type'] = this.type;
 
             return _res;
         }
@@ -143,15 +146,14 @@ namespace leojs
         {
             let _links : { [id:string] : RUrdfLink } = {};
 
-            let _linkElms = rootElement.getElementsByTagName( 'link' );
+            let _linkElms = this._getImmediateChildrenByTagName( rootElement, 'link' );
             for ( let i = 0; i < _linkElms.length; i++ )
             {
-                let _linkId = _linkElms[i].attributes['name'].nodeValue;
+                let _linkId = _linkElms[i].getAttribute( 'name' );
 
                 _links[ _linkId ] = this._parseSingleLink( _linkElms[i] );
                 _links[ _linkId ].id = _linkId;
             }
-
 
             return _links;
         }
@@ -160,13 +162,18 @@ namespace leojs
         {
             let _link = new RUrdfLink();
 
-            // For now, just support visual node
-            let _visualElm = linkElm.getElementsByTagName( 'visual' )[0];
-            let _originElm = _visualElm.getElementsByTagName( 'origin' )[0];
-            let _geoElm = _visualElm.getElementsByTagName( 'geometry' )[0];
+            // Check if has element inside, if not, it might be the root node, if ...
+            // not, just return the default link
+            if ( linkElm.getElementsByTagName( 'visual' ).length != 0 )
+            {
+                // For now, just support visual node
+                let _visualElm = linkElm.getElementsByTagName( 'visual' )[0];
+                let _originElm = _visualElm.getElementsByTagName( 'origin' )[0];
+                let _geoElm = _visualElm.getElementsByTagName( 'geometry' )[0];
 
-            this._parseVisualOrigin( _link, _originElm );
-            this._parseVisualGeometry( _link, _geoElm );
+                this._parseVisualOrigin( _link, _originElm );
+                this._parseVisualGeometry( _link, _geoElm );
+            }
 
             return _link;
         }
@@ -256,7 +263,7 @@ namespace leojs
         {
             let _joints : { [id:string] : RUrdfJoint } = {};
 
-            let _jointElms = rootElement.getElementsByTagName( 'link' );
+            let _jointElms = this._getImmediateChildrenByTagName( rootElement, 'joint' );
             for ( let i = 0; i < _jointElms.length; i++ )
             {
                 let _jointId = _jointElms[i].attributes['name'].nodeValue;
@@ -301,7 +308,7 @@ namespace leojs
                  jointElm.getElementsByTagName( 'child' ).length != 0 )
             {
                 let _parentElm = jointElm.getElementsByTagName( 'parent' )[0];
-                let _childElm  = jointElm.getElementsByTagName( 'parent' )[0];
+                let _childElm  = jointElm.getElementsByTagName( 'child' )[0];
 
                 joint.parentId = this._getStringAttrib( _parentElm, 'link', '' );
                 joint.childId  = this._getStringAttrib( _childElm, 'link', '' );
@@ -363,6 +370,7 @@ namespace leojs
             let _kinNodes = this._makeKinNodes( links );
             let _kinJoints = this._makeKinJoints( joints );
             this._assembleKinTree( _kinTree, _kinNodes, _kinJoints );
+            _kinTree.setRootNode( _kinNodes[ _rootLink.id ] );
 
             return _kinTree;
         }
@@ -566,6 +574,22 @@ namespace leojs
             }
 
             return new core.LVec3( _data[0], _data[1], _data[2] );
+        }
+
+        private _getImmediateChildrenByTagName( elm : Element, name : string ) : Element[]
+        {
+            let _res : Element[] = [];
+            let _candidates = elm.children;
+
+            for ( let q = 0; q < _candidates.length; q++ )
+            {
+                if ( _candidates[q].tagName == name )
+                {
+                    _res.push( _candidates[q] );
+                }
+            }
+
+            return _res;
         }
     }
 
