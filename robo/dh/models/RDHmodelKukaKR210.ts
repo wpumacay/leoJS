@@ -49,23 +49,29 @@ namespace leojs
 
         protected _buildDHrepresentation() : void
         {
-            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+            this.m_dhTable.appendEntry( new RDHentry( 'joint_1',
+                                                      [ true, true, true, false ],
                                                       [ 0, 0, 0.75, 0 ],
                                                       core.radians( -185 ) , core.radians( 185 ) ) );
-            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+            this.m_dhTable.appendEntry( new RDHentry( 'joint_2',
+                                                      [ true, true, true, false ],
                                                       [ -0.5 * Math.PI, 0.35, 0, 0 ],
                                                       core.radians( -45 ), core.radians( 85 ),
                                                       1, -0.5 * Math.PI ) );
-            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+            this.m_dhTable.appendEntry( new RDHentry( 'joint_3',
+                                                      [ true, true, true, false ],
                                                       [ 0, 1.25, 0, 0 ],
                                                       core.radians( -210 ), core.radians( 155 - 90 ) ) );
-            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+            this.m_dhTable.appendEntry( new RDHentry( 'joint_4',
+                                                      [ true, true, true, false ],
                                                       [ -0.5 * Math.PI, -0.054, 1.5, 0 ],
                                                       -Math.PI, Math.PI ) );
-            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+            this.m_dhTable.appendEntry( new RDHentry( 'joint_5',
+                                                      [ true, true, true, false ],
                                                       [ 0.5 * Math.PI, 0, 0, 0 ],
                                                       core.radians( -125 ), core.radians( 125 ) ) );
-            this.m_dhTable.appendEntry( new RDHentry( [ true, true, true, false ],
+            this.m_dhTable.appendEntry( new RDHentry( 'joint_6',
+                                                      [ true, true, true, false ],
                                                       [ -0.5 * Math.PI, 0, 0, 0 ],
                                                       -Math.PI, Math.PI ) );
         }

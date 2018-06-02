@@ -57,6 +57,9 @@ namespace leojs
 
             super.update( dt );
         }
+
+        public getJoints() : { [id:string] : RKinJoint } { return this.m_kinTree.joints(); }
+        public getNodes() : { [id:string] : RKinNode } { return this.m_kinTree.nodes(); }
     }
 
 

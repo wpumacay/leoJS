@@ -236,6 +236,15 @@ namespace leojs
 
         public getDHtable() : RDHtable { return this.m_dhTable; }
 
+        public getJointValueById( jointId : string ) : number
+        {
+            return this.m_dhTable.getJointValueById( jointId );
+        }
+        public doesJointExist( jointId : string ) : boolean
+        {
+            return this.m_dhTable.doesJointExist( jointId );
+        }
+
         public getEndEffectorXYZ() : core.LVec3
         {
             let _pos : core.LVec3 = new core.LVec3( 0, 0, 0 );

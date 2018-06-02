@@ -74,6 +74,20 @@ namespace leojs
                 this.m_dhModel.update( dt );
             }
 
+            if ( this.m_manipulatorRef )
+            {
+                let _kinJoints = this.m_manipulatorRef.getJoints();
+                
+                for ( let _jointId in _kinJoints )
+                {
+                    if ( this.m_dhModel.doesJointExist( _jointId ) )
+                    {
+                        let _jointValue = this.m_dhModel.getJointValueById( _jointId );
+                        _kinJoints[ _jointId ].setJointValue( _jointValue );
+                    }
+                }
+            }
+
             if ( this.m_dhGuiController )
             {
                 this.m_dhGuiController.update( dt );

@@ -73,9 +73,9 @@ namespace leojs
         private m_id : string;
         private m_parentJoint : RKinJoint;
         private m_childrenJoints : RKinJoint[];
+        private m_linkTransform : core.LMat4;
         private m_worldTransform : core.LMat4;
         private m_localTransform : core.LMat4;
-        private m_tmpTransform : core.LMat4;// For intermediate calculation
         private m_geometry : RKinNodeGeometry;
 
         constructor( nodeId : string )
@@ -84,8 +84,8 @@ namespace leojs
             this.m_parentJoint = null;
             this.m_childrenJoints = [];
             this.m_localTransform = new core.LMat4();
+            this.m_linkTransform = new core.LMat4();
             this.m_worldTransform = new core.LMat4();
-            this.m_tmpTransform = new core.LMat4();
             this.m_geometry = null;
         }
 
@@ -101,6 +101,7 @@ namespace leojs
 
         public getGeometry() : RKinNodeGeometry { return this.m_geometry; }
         public getLocalTransform() : core.LMat4 { return this.m_localTransform; }
+        public getLinkTransform() : core.LMat4 { return this.m_linkTransform; }
         public getWorldTransform() : core.LMat4 { return this.m_worldTransform; }
         public getId () : string { return this.m_id; }
         public getChildrenJoints() : RKinJoint[] { return this.m_childrenJoints; }
@@ -121,17 +122,20 @@ namespace leojs
             // Compute total tranform
             if ( this.m_parentJoint != null )
             {
-                core.mulMatMat44InPlace( this.m_tmpTransform,
-                                         this.m_parentJoint.getParentNode().getWorldTransform(),
-                                         this.m_parentJoint.getJointTransform() );
+                let _parentTransform = this.m_parentJoint.getParentNode().getLinkTransform();
+                let _jointTransform = this.m_parentJoint.getJointTransform();
+
+                core.mulMatMat44InPlace( this.m_linkTransform,
+                                         _parentTransform,
+                                         _jointTransform );
             }
             else
             {
-                core.LMat4.setToIdentity( this.m_tmpTransform );
+                core.LMat4.setToIdentity( this.m_linkTransform );
             }
 
             core.mulMatMat44InPlace( this.m_worldTransform,
-                                     this.m_tmpTransform,
+                                     this.m_linkTransform,
                                      this.m_localTransform );
 
             // Update children recursively

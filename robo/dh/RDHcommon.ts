@@ -31,6 +31,7 @@ namespace leojs
 
     export class RDHentry
     {
+        private m_jointId : string;
         private m_fixed : boolean[];
         private m_values : number[];
         private m_transform : core.LMat4;
@@ -43,7 +44,8 @@ namespace leojs
         private m_maxJointValue : number;
         private m_rangeJointValue : number;
 
-        constructor( pFixed : boolean[],
+        constructor( jointId : string,
+                     pFixed : boolean[],
                      pValues : number[],
                      pMinJointValue : number,
                      pMaxJointValue : number,
@@ -53,6 +55,7 @@ namespace leojs
             console.assert( pFixed.length == 4, 'wrong length for pFixed parameter' );
             console.assert( pValues.length == 4, 'wrong length for pValues parameter' );
 
+            this.m_jointId = jointId;
             this.m_fixed = pFixed;
             this.m_values = pValues;
             this.m_transform = new core.LMat4();
@@ -69,6 +72,7 @@ namespace leojs
             this._updateTransform();
         }
 
+        public jointId() : string { return this.m_jointId; }
         public fixed() : boolean[] { return this.m_fixed; }
         public values() : number[] { return this.m_values; }
         public minJointValue() : number { return this.m_minJointValue; }
@@ -163,6 +167,7 @@ namespace leojs
     export class RDHtable
     {
         private m_entries : RDHentry[];
+        private m_entriesById : { [id:string] : RDHentry };
         private m_totalTransform : core.LMat4;
         private m_xyz : core.LVec3;
         private m_rpy : core.LVec3;
@@ -170,6 +175,7 @@ namespace leojs
         constructor()
         {
             this.m_entries = [];
+            this.m_entriesById = {};
             this.m_totalTransform = new core.LMat4();
             this.m_xyz = new core.LVec3( 0, 0, 0 );
             this.m_rpy = new core.LVec3( 0, 0, 0 );
@@ -178,6 +184,7 @@ namespace leojs
         public appendEntry( entry : RDHentry ) : void
         {
             this.m_entries.push( entry );
+            this.m_entriesById[ entry.jointId() ] = entry;
         }
 
         public numJoints() : number { return this.m_entries.length; }
@@ -242,6 +249,39 @@ namespace leojs
             }
 
             console.warn( 'RDHtable> asking joint for non-joint index' );
+            return 0;
+        }
+
+        public doesJointExist( jointId : string ) : boolean
+        {
+            if ( this.m_entriesById[ jointId ] )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public getJointValueById( jointId : string ) : number
+        {
+            if ( this.m_entriesById[ jointId ] )
+            {
+                let _entry : RDHentry = this.m_entriesById[ jointId ];
+
+                if ( _entry.getJointType() == JointType.REVOLUTE )
+                {
+                    return _entry.getParamValue( DHparams.theta_i );
+                }
+                else if ( _entry.getJointType() == JointType.PRISMATIC )
+                {
+                    return _entry.getParamValue( DHparams.d_i );
+                }
+
+                console.warn( 'RDHtable> asking joint for non-joint index' );
+                return 0;
+            }
+
+            console.warn( 'RDHtable> asking for a non-existent joint with id: ' + jointId );
             return 0;
         }
 
