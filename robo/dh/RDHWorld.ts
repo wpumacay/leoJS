@@ -38,6 +38,7 @@ namespace leojs
 
             this._initializeModel();
             this._initializeUI();
+            this._initializeEnvironment();
         }
 
         private _initializeModel() : void
@@ -65,9 +66,68 @@ namespace leojs
             }
         }
 
+        private _initializeEnvironment() : void
+        {
+            // TODO: Floor with texture looks kind of weird. I mean, the manipulator does ...
+            // not stand out in the whole scene, because I haven't ported shadowmapping yet :(.
+            // For now, just make it look like RViz, and make a plain grid made of lines
+
+            // let _planeMesh = buildPrimitive( { 'shape' : 'plane',
+            //                                    'width' : 40,
+            //                                    'depth' : 40,
+            //                                    'texRangeWidth' : 10,
+            //                                    'texRangeDepth' : 10 },
+            //                                  { 'material' : 'textured',
+            //                                    'textureId' : 'img_default',
+            //                                    'specular' : core.DEFAULT_SPECULAR,
+            //                                    'shininess' : core.DEFAULT_SHININESS } );
+            // let _planeEntity = new REntity();
+            // let _planeGraphics = new RMesh3dComponent( _planeEntity, _planeMesh );
+            // _planeEntity.addComponent( _planeGraphics );
+
+            // _planeEntity.rotation.x = 0.5 * Math.PI;
+
+            // this.addEntity( _planeEntity );
+
+            // TODO: Add support for polylists, as it seems the shelf and bin use it :(
+            // let _shelfModelInfo = core.LAssetsManager.INSTANCE.getModel( '' )
+            // let _binModelInfo = core.LAssetsManager.INSTANCE.getModel( '' );
+        }
+
+        private _drawFloorGrid() : void
+        {
+            let _gridRangeX = 10;
+            let _divX = 5;
+            let _stepX = _gridRangeX / _divX;
+
+            let _gridRangeY = 10;
+            let _divY = 5;
+            let _stepY = _gridRangeY / _divY;
+
+            // Draw lines parallel to x axis
+            for ( let q = -_divY; q < _divY; q++ )
+            {
+                let _p1 = new core.LVec3( -_gridRangeX, q * _stepY, 0 );
+                let _p2 = new core.LVec3( _gridRangeX, q * _stepY, 0 );
+
+                engine3d.DebugSystem.drawLine( _p1, _p2, core.LIGHT_GRAY );
+            }
+
+            // Draw lines parallel to y axis
+            for ( let q = -_divX; q < _divX; q++ )
+            {
+                let _p1 = new core.LVec3( q * _stepY, -_gridRangeY, 0 );
+                let _p2 = new core.LVec3( q * _stepY, _gridRangeY, 0 );
+
+                engine3d.DebugSystem.drawLine( _p1, _p2, core.LIGHT_GRAY );
+            }
+        }
+
         public update( dt : number ) : void
         {
             super.update( dt );
+
+            this._drawFloorGrid();
 
             if ( this.m_dhModel )
             {

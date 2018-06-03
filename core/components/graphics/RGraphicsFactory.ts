@@ -23,7 +23,9 @@ namespace leojs
 
             case 'plane' :
                 _geometry = engine3d.LGeometryBuilder.createPlane( geoProps['width'] || 1.0,
-                                                                   geoProps['depth'] || 1.0 );
+                                                                   geoProps['depth'] || 1.0,
+                                                                   geoProps['texRangeWidth'] || 1.0,
+                                                                   geoProps['texRangeDepth'] || 1.0 );
             break;
 
             case 'box' :
