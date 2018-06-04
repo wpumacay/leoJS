@@ -105,7 +105,7 @@ namespace leojs
             let _stepY = _gridRangeY / _divY;
 
             // Draw lines parallel to x axis
-            for ( let q = -_divY; q < _divY; q++ )
+            for ( let q = -_divY; q <= _divY; q++ )
             {
                 let _p1 = new core.LVec3( -_gridRangeX, q * _stepY, 0 );
                 let _p2 = new core.LVec3( _gridRangeX, q * _stepY, 0 );
@@ -114,7 +114,7 @@ namespace leojs
             }
 
             // Draw lines parallel to y axis
-            for ( let q = -_divX; q < _divX; q++ )
+            for ( let q = -_divX; q <= _divX; q++ )
             {
                 let _p1 = new core.LVec3( q * _stepY, -_gridRangeY, 0 );
                 let _p2 = new core.LVec3( q * _stepY, _gridRangeY, 0 );

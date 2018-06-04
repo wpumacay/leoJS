@@ -37,6 +37,7 @@ namespace leojs
         'ext/cat1js/engine3d/lights/LPointLight.js',
         'ext/cat1js/engine3d/camera/LFixedPointCamera.js',
         'ext/cat1js/engine3d/camera/LFixedDirectionCamera.js',
+        'ext/cat1js/engine3d/camera/LOrbitCamera.js',
         'ext/cat1js/engine3d/shaders/LShaderBasic3d.js',
         'ext/cat1js/engine3d/shaders/LShaderPhongLighting.js',
         'ext/cat1js/engine3d/shaders/LShaderDebugDrawer3d.js',

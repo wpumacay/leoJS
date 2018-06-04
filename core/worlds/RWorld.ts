@@ -2,6 +2,7 @@
 /// <reference path="../RCommon.ts" />
 /// <reference path="../../ext/cat1js/core/scene/LScene.ts" />
 /// <reference path="../../ext/cat1js/engine3d/camera/LFixedPointCamera.ts" />
+/// <reference path="../../ext/cat1js/engine3d/camera/LOrbitCamera.ts" />
 /// <reference path="../../ext/cat1js/engine3d/lights/LDirectionalLight.ts" />
 /// <reference path="../entities/REntity.ts" />
 
@@ -35,17 +36,25 @@ namespace leojs
         {
             this.m_scene = new core.LScene( 'mainScene' );
 
-            let _camera : engine3d.LFixedPointCamera = new engine3d.LFixedPointCamera( new core.LVec3( 5.0, 5.0, 5.0 ),
-                                                                                       new core.LVec3( 0.0, 0.0, 0.0 ),
-                                                                                       new core.LVec3( 0.0, 0.0, 1.0 ),
-                                                                                       this.m_appWidth, this.m_appHeight,
-                                                                                       1.0, 100.0,
-                                                                                       45.0, core.ProjectionMode.PERSPECTIVE,
-                                                                                       "mainCamera" );
+            // let _camera = new engine3d.LFixedPointCamera( new core.LVec3( 5.0, 5.0, 5.0 ),
+            //                                               new core.LVec3( 0.0, 0.0, 0.0 ),
+            //                                               new core.LVec3( 0.0, 0.0, 1.0 ),
+            //                                               this.m_appWidth, this.m_appHeight,
+            //                                               1.0, 100.0,
+            //                                               45.0, core.ProjectionMode.PERSPECTIVE,
+            //                                               "mainCamera" );
+
+            let _camera = new engine3d.LOrbitCamera( new core.LVec3( 5.0, 5.0, 5.0 ),
+                                                     new core.LVec3( 0.0, 0.0, 0.0 ),
+                                                     new core.LVec3( 0.0, 0.0, 1.0 ),
+                                                     this.m_appWidth, this.m_appHeight,
+                                                     1.0, 100.0,
+                                                     45.0, core.ProjectionMode.PERSPECTIVE,
+                                                     "mainCamera" );
 
             this.m_scene.addCamera( _camera );
 
-            let _light : engine3d.LPointLight = new engine3d.LPointLight( new core.LVec3( 0.0, 3.0, 0.0 ),
+            let _light : engine3d.LPointLight = new engine3d.LPointLight( new core.LVec3( 0.0, 0.0, 3.0 ),
                                                                           new core.LVec3( 0.5, 0.5, 0.5 ),
                                                                           new core.LVec3( 0.8, 0.8, 0.8 ),
                                                                           new core.LVec3( 0.85, 0.85, 0.85 ) );

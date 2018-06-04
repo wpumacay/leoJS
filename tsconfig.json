@@ -41,6 +41,7 @@
     "ext/cat1js/engine3d/lights/LPointLight.ts",
     "ext/cat1js/engine3d/camera/LFixedPointCamera.ts",
     "ext/cat1js/engine3d/camera/LFixedDirectionCamera.ts",
+    "ext/cat1js/engine3d/camera/LOrbitCamera.ts",
     "ext/cat1js/engine3d/shaders/LShaderBasic3d.ts",
     "ext/cat1js/engine3d/shaders/LShaderPhongLighting.ts",
     "ext/cat1js/engine3d/shaders/LShaderDebugDrawer3d.ts",
