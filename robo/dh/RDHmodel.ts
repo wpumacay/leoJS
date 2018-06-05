@@ -35,6 +35,8 @@ namespace leojs
         protected m_xyzZeroPosition : core.LVec3;
         protected m_rpyZeroPosition : core.LVec3;
 
+        protected m_visibility : boolean;
+
         constructor( world : RDHWorld )
         {
             this.m_dhTable = new RDHtable();
@@ -48,6 +50,8 @@ namespace leojs
             this.m_xyzMaxEstimate = new core.LVec3( 0, 0, 0 );
             this.m_xyzZeroPosition = new core.LVec3( 0, 0, 0 );
             this.m_rpyZeroPosition = new core.LVec3( 0, 0, 0 );
+
+            this.m_visibility = true;
 
             this.m_endEffectorTotalTransform = new core.LMat4();
             this.m_endEffectorCompensation = new core.LMat4();
@@ -144,9 +148,12 @@ namespace leojs
 
             if ( _entries.length > 0 )
             {
-                engine3d.DebugSystem.drawLine( this.m_base.position,
-                                               this.m_frames[0].position,
-                                               core.CYAN );
+                if ( this.m_visibility )
+                {
+                    engine3d.DebugSystem.drawLine( this.m_base.position,
+                                                   this.m_frames[0].position,
+                                                   core.CYAN );
+                }
             }
 
 
@@ -163,9 +170,12 @@ namespace leojs
 
                 if ( q < ( _entries.length - 1 ) )
                 {
-                    engine3d.DebugSystem.drawLine( this.m_frames[ q ].position,
-                                                   this.m_frames[ q + 1 ].position,
-                                                   core.CYAN );
+                    if ( this.m_visibility )
+                    {
+                        engine3d.DebugSystem.drawLine( this.m_frames[ q ].position,
+                                                       this.m_frames[ q + 1 ].position,
+                                                       core.CYAN );
+                    }
                 }
 
                 core.LMat4.extractPositionInPlace( _jointEntity.position,
@@ -263,6 +273,31 @@ namespace leojs
                                                         this.m_endEffectorTotalTransform );
 
             return _rpy;
+        }
+
+        public setModelVisibility( visible : boolean ) : void
+        {
+            this.m_visibility = visible;
+
+            for ( let _frame of this.m_frames )
+            {
+                _frame.setVisibility( visible );
+            }
+
+            for ( let _joint of this.m_joints )
+            {
+                _joint.setVisibility( visible );
+            }
+
+            if ( this.m_endEffector )
+            {
+                this.m_endEffector.setVisibility( visible );
+            }
+
+            if ( this.m_base )
+            {
+                this.m_base.setVisibility( visible );
+            }
         }
 
     }

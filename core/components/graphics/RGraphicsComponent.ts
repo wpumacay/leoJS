@@ -32,6 +32,14 @@ namespace leojs
             }
         }
 
+        public setVisibility( visible : boolean ) : void
+        {
+            for ( let _renderable of this.m_renderables )
+            {
+                _renderable.setVisibility( visible );
+            }
+        }
+
     }
 
 

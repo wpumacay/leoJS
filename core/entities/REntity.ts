@@ -52,6 +52,15 @@ namespace leojs
                 this.m_components[ _key ].update( dt );
             }
         }
+
+        public setVisibility( visible : boolean ) : void
+        {
+            if ( this.m_components[ RComponentType.GRAPHICS ] )
+            {
+                let _graphics = <RGraphicsComponent> this.m_components[ RComponentType.GRAPHICS ];
+                _graphics.setVisibility( visible );
+            }
+        }
     }
 
 

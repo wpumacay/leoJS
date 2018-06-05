@@ -150,6 +150,19 @@ namespace leojs
 
             if ( this.m_dhGuiController )
             {
+                // Update visibility
+                let _isDHmodelVisible = this.m_dhGuiController.isDHmodelVisible();
+                let _isURDFmodelVisible = this.m_dhGuiController.isURDFmodelVisible();
+
+                if ( this.m_dhModel )
+                {
+                    this.m_dhModel.setModelVisibility( _isDHmodelVisible );
+                }
+                if ( this.m_manipulatorRef )
+                {
+                    this.m_manipulatorRef.setVisibility( _isURDFmodelVisible );
+                }
+
                 this.m_dhGuiController.update( dt );
             }
         }

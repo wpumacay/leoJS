@@ -76,7 +76,7 @@ namespace leojs
         private m_onChangeCallback : Function;
 
         constructor( uiName : string,
-                     vMin : number, vMax : number, vCurrent,
+                     vMin : number, vMax : number, vCurrent : number,
                      onChangeCallback : Function )
         {
             super( uiName );
@@ -90,7 +90,7 @@ namespace leojs
 
         public min() : number { return this.m_min; }
         public max() : number { return this.m_max; }
-        public current() : number { return this.m_current; }
+        public initValue() : number { return this.m_current; }
         public onChangeCallback() : Function { return this.m_onChangeCallback; }
     }
 
@@ -107,7 +107,7 @@ namespace leojs
             this.m_state = vState;
         }
 
-        public state() : boolean { return this.m_state; }
+        public initState() : boolean { return this.m_state; }
     }
 
     export class RUIfolder extends RUIelement
@@ -220,13 +220,13 @@ namespace leojs
 
         private _buildSlider( sldElement : RUIslider, dguiParent : dat.GUI ) : dat.GUIController
         {
-            this.m_uiDef[ sldElement.name() ] = sldElement.current();
+            this.m_uiDef[ sldElement.name() ] = sldElement.initValue();
 
             let _controller : dat.GUIController = dguiParent.add( this.m_uiDef,
                                                                   sldElement.name(),
                                                                   sldElement.min(),
                                                                   sldElement.max() );
-            _controller.setValue( sldElement.current() );
+            _controller.setValue( sldElement.initValue() );
             _controller.step( 0.001 );
             if ( sldElement.onChangeCallback() )
             {
@@ -238,7 +238,7 @@ namespace leojs
 
         private _buildCheckbox( chbxElement : RUIcheckbox, dguiParent : dat.GUI ) : dat.GUIController
         {
-            this.m_uiDef[ chbxElement.name() ] = chbxElement.state();
+            this.m_uiDef[ chbxElement.name() ] = chbxElement.initState();
 
             let _controller : dat.GUIController = dguiParent.add( this.m_uiDef,
                                                                   chbxElement.name() );
@@ -270,6 +270,9 @@ namespace leojs
         private m_dhTable : RDHtable;
         private m_dhModel : RDHmodel;
 
+        private m_isDHmodelVisible : boolean;
+        private m_isURDFmodelVisible : boolean;
+
         constructor( dhModel : RDHmodel )
         {
             this.m_dgui = new dat.GUI();
@@ -277,6 +280,9 @@ namespace leojs
 
             this.m_dhModel = dhModel;
             this.m_dhTable = dhModel.getDHtable();
+
+            this.m_isDHmodelVisible = true;
+            this.m_isURDFmodelVisible = true;
 
             this._initializeUI();
             this._initializeControllers();
@@ -351,6 +357,14 @@ namespace leojs
             // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
             this.m_uiWrapper.appendUIelement( _fInverseKinematics );
             // ******************************************************************
+            // Visibility ******************************************************
+            let _fVisibility = new RUIfolder( 'Visibility' );
+
+            _fVisibility.addChild( new RUIcheckbox( 'DH_model', true ) );
+            _fVisibility.addChild( new RUIcheckbox( 'URDF_model', true ) );
+
+            this.m_uiWrapper.appendUIelement( _fVisibility );
+            // ******************************************************************
         }
 
         private _initializeControllers() : void
@@ -358,20 +372,8 @@ namespace leojs
             this.m_uiWrapper.buildUI();
         }
 
-        public getValueFromUI( name : string ) : number
-        {
-            let _element : RUIelement = this.m_uiWrapper.getElementByName( name );
-            if ( !_element )
-            {
-                console.warn( 'RDHguiController> cant get value from ui: ' + name );
-                return 0;
-            }
-
-            if ( _element.type() == UItype.SLIDER )
-            {
-                return ( <RUIslider> _element ).current();
-            }
-        }
+        public isDHmodelVisible() : boolean { return this.m_isDHmodelVisible; }
+        public isURDFmodelVisible() : boolean { return this.m_isURDFmodelVisible; }
 
         public doForwardKinematics() : void
         {
@@ -421,6 +423,7 @@ namespace leojs
         {
             this._updateFKvalues();
             this._updateIKvalues();
+            this._updateVisibilityValues();
         }
 
         private _updateFKvalues() : void
@@ -457,6 +460,15 @@ namespace leojs
                 let _qText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'ik_q' + ( q + 1 ) );
                 _qText.controller().setValue( '' + _joints[q] );
             }
+        }
+
+        private _updateVisibilityValues() : void
+        {
+            let _chbxDHmodel = ( <RUIcheckbox> this.m_uiWrapper.getElementByName( 'DH_model' ) );
+            let _chbxURDFmodel = ( <RUIcheckbox> this.m_uiWrapper.getElementByName( 'URDF_model' ) );
+
+            this.m_isDHmodelVisible = ( _chbxDHmodel.controller().getValue() )
+            this.m_isURDFmodelVisible = ( _chbxURDFmodel.controller().getValue() );
         }
     }
 

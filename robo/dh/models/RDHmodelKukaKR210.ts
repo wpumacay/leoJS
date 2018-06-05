@@ -311,13 +311,17 @@ namespace leojs
                                           this.m_ikWCrotMat.buff[6] * this.m_eeOffset.y +
                                           this.m_ikWCrotMat.buff[10] * this.m_eeOffset.z );
 
-                engine3d.DebugSystem.drawLine( core.ORIGIN,
-                                               this.m_ikEEPosRef,
-                                               core.YELLOW );
+                if ( this.m_visibility )
+                {
+                    engine3d.DebugSystem.drawLine( core.ORIGIN,
+                                                   this.m_ikEEPosRef,
+                                                   core.YELLOW );
 
-                engine3d.DebugSystem.drawLine( core.ORIGIN,
-                                               this.m_ikWCPosRef,
-                                               core.MAGENTA );
+                    engine3d.DebugSystem.drawLine( core.ORIGIN,
+                                                   this.m_ikWCPosRef,
+                                                   core.MAGENTA );
+                }
+
             }
         }
     }
