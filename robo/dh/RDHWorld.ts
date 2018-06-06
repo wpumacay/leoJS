@@ -96,10 +96,10 @@ namespace leojs
                                                       _binModelInfo.geometryInfo.normals,
                                                       _binModelInfo.geometryInfo.texCoords,
                                                       _binModelInfo.geometryInfo.indices );
-            let _material = new engine3d.LPhongMaterial( new core.LVec3( 1.0, 0.5, 0.31 ),
-                                                         new core.LVec3( 1.0, 0.5, 0.31 ),
-                                                         new core.LVec3( 0.5, 0.5, 0.5 ),
-                                                         32 );
+            let _material = new engine3d.LPhongMaterial( core.DEFAULT_AMBIENT.clone(),
+                                                         core.DEFAULT_DIFFUSE.clone(),
+                                                         core.DEFAULT_SPECULAR.clone(),
+                                                         core.DEFAULT_SHININESS );
 
             let _binMesh = new engine3d.LModel( _geometry, _material, _binModelInfo.correctionMat );
 
