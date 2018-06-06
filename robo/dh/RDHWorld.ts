@@ -91,7 +91,25 @@ namespace leojs
 
             // TODO: Add support for polylists, as it seems the shelf and bin use it :(
             // let _shelfModelInfo = core.LAssetsManager.INSTANCE.getModel( '' )
-            // let _binModelInfo = core.LAssetsManager.INSTANCE.getModel( '' );
+            let _binModelInfo = core.LAssetsManager.INSTANCE.getModel( 'kinematics_shelf' );
+            let _geometry = new engine3d.LGeometry3d( _binModelInfo.geometryInfo.vertices,
+                                                      _binModelInfo.geometryInfo.normals,
+                                                      _binModelInfo.geometryInfo.texCoords,
+                                                      _binModelInfo.geometryInfo.indices );
+            let _material = new engine3d.LPhongMaterial( new core.LVec3( 1.0, 0.5, 0.31 ),
+                                                         new core.LVec3( 1.0, 0.5, 0.31 ),
+                                                         new core.LVec3( 0.5, 0.5, 0.5 ),
+                                                         32 );
+
+            let _binMesh = new engine3d.LModel( _geometry, _material, _binModelInfo.correctionMat );
+
+            let _binEntity = new REntity();
+            let _binGraphics = new RMesh3dComponent( _binEntity, _binMesh );
+            _binEntity.addComponent( _binGraphics );
+
+            _binEntity.position.x = 5.0;
+
+            this.addEntity( _binEntity );
         }
 
         private _drawFloorGrid() : void

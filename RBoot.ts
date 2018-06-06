@@ -14,6 +14,7 @@ namespace leojs
         'ext/cat1js/core/assets/LShadersManager.js',
         'ext/cat1js/core/assets/LTexturesManager.js',
         'ext/cat1js/core/assets/LModelCommon.js',
+        'ext/cat1js/core/assets/LColladaCommon.js',
         'ext/cat1js/core/assets/LColladaParser.js',
         'ext/cat1js/core/assets/LModelsManager.js',
         'ext/cat1js/core/assets/LTextAssetsManager.js',
