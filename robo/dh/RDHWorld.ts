@@ -89,27 +89,60 @@ namespace leojs
 
             // this.addEntity( _planeEntity );
 
-            // TODO: Add support for polylists, as it seems the shelf and bin use it :(
-            // let _shelfModelInfo = core.LAssetsManager.INSTANCE.getModel( '' )
-            let _binModelInfo = core.LAssetsManager.INSTANCE.getModel( 'kinematics_shelf' );
-            let _geometry = new engine3d.LGeometry3d( _binModelInfo.geometryInfo.vertices,
-                                                      _binModelInfo.geometryInfo.normals,
-                                                      _binModelInfo.geometryInfo.texCoords,
-                                                      _binModelInfo.geometryInfo.indices );
-            let _material = new engine3d.LPhongMaterial( core.DEFAULT_AMBIENT.clone(),
-                                                         core.DEFAULT_DIFFUSE.clone(),
-                                                         core.DEFAULT_SPECULAR.clone(),
-                                                         core.DEFAULT_SHININESS );
+            // Make bin model ******************************************************************
+            let _binModelInfo = core.LAssetsManager.INSTANCE.getModel( 'kinematics_bin' );
+            let _geometryBin = new engine3d.LGeometry3d( _binModelInfo.geometryInfo.vertices,
+                                                         _binModelInfo.geometryInfo.normals,
+                                                         _binModelInfo.geometryInfo.texCoords,
+                                                         _binModelInfo.geometryInfo.indices );
+            let _materialBin = new engine3d.LPhongMaterial( core.DEFAULT_AMBIENT.clone(),
+                                                            core.DEFAULT_DIFFUSE.clone(),
+                                                            core.DEFAULT_SPECULAR.clone(),
+                                                            core.DEFAULT_SHININESS );
 
-            let _binMesh = new engine3d.LModel( _geometry, _material, _binModelInfo.correctionMat );
+            let _binMesh = new engine3d.LModel( _geometryBin, 
+                                                _materialBin, 
+                                                _binModelInfo.correctionMat );
 
             let _binEntity = new REntity();
             let _binGraphics = new RMesh3dComponent( _binEntity, _binMesh );
             _binEntity.addComponent( _binGraphics );
 
-            _binEntity.position.x = 5.0;
+            _binEntity.position.x = 0.0;
+            _binEntity.position.y = 2.5;
+            _binEntity.position.z = 0.2048;
 
             this.addEntity( _binEntity );
+            // *********************************************************************************
+            // Make shelf model ****************************************************************
+            let _shelfModelInfo = core.LAssetsManager.INSTANCE.getModel( 'kinematics_shelf' );
+            let _geometryShelf = new engine3d.LGeometry3d( _shelfModelInfo.geometryInfo.vertices,
+                                                           _shelfModelInfo.geometryInfo.normals,
+                                                           _shelfModelInfo.geometryInfo.texCoords,
+                                                           _shelfModelInfo.geometryInfo.indices );
+            let _materialShelf = new engine3d.LPhongMaterial( core.DEFAULT_AMBIENT.clone(),
+                                                              core.DEFAULT_DIFFUSE.clone(),
+                                                              core.DEFAULT_SPECULAR.clone(),
+                                                              core.DEFAULT_SHININESS );
+
+            let _shelfMesh = new engine3d.LModel( _geometryShelf, 
+                                                  _materialShelf, 
+                                                  _shelfModelInfo.correctionMat );
+
+            let _shelfEntity = new REntity();
+            let _shelfGraphics = new RMesh3dComponent( _shelfEntity, _shelfMesh );
+            _shelfEntity.addComponent( _shelfGraphics );
+
+            _shelfEntity.position.x = 2.7;
+            _shelfEntity.position.y = 0.0;
+            _shelfEntity.position.z = 1.036;
+
+            _shelfEntity.rotation.x = 0.0;
+            _shelfEntity.rotation.y = 0.0;
+            _shelfEntity.rotation.z = 1.57;
+
+            this.addEntity( _shelfEntity );
+            // *********************************************************************************
         }
 
         private _drawFloorGrid() : void

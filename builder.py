@@ -10,11 +10,12 @@ DEFAULT_BUILD_DIRECTORY = 'build/'
 BUILDER_PROJECT_NAME = 'leojs'
 BUILDER_COMPILER_COMMAND = 'tsc'
 BUILDER_DTS_GENERATOR_COMMAND = 'dts-generator'
-BUILDER_INDEX_FILES = [ 'index.html' ]
+BUILDER_INDEX_FILES = [ 'index.html', 'playground.html' ]
 BUILDER_RESOURCES_FOLDER = 'res' # assets
 BUILDER_EXTJS_FOLDER = 'extjs' # extra js libraries
 # Add here the extra files you want to copy to the build dir
-BUILDER_EXTRA_FILES_LIST = [  ]
+BUILDER_EXTRA_FILES_LIST = [ 'playgroundEntryPoint.js',
+                             'playground.css' ]
 
 MODE_BUILD_ONLY = 'build'
 MODE_BUILD_AND_RUN = 'all'
@@ -75,10 +76,14 @@ class RBuilder :
 
         print( 'bundling d.ts declarations' )
         # Build bundled d.ts
-        sp.call( [BUILDER_DTS_GENERATOR_COMMAND, 
-                 '--name', BUILDER_PROJECT_NAME,
-                 '--project', './',
-                 '--out', self.m_buildDir + BUILDER_PROJECT_NAME + '.d.ts'] )
+        try :
+            sp.call( [BUILDER_DTS_GENERATOR_COMMAND, 
+                     '--name', BUILDER_PROJECT_NAME,
+                     '--project', './',
+                     '--out', self.m_buildDir + BUILDER_PROJECT_NAME + '.d.ts'] )
+        except :
+            print( 'Mmmm, it seems you dont have dts-generator for d.ts generation' )
+            print( 'No worries, d.ts is generated and used only in the playground, for completions' )
         print( 'ok!' )
 
         print( 'DONE BUILDING' )
@@ -111,6 +116,8 @@ class RBuilder :
         sp.call( ['cp', '-r', 'ext/cat1js/res/models', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
         sp.call( ['cp', '-r', 'ext/cat1js/res/shaders', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
         sp.call( ['cp', '-r', 'ext/cat1js/res/text', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
+        # Copy monaco editor minified from cat1js
+        sp.call( ['cp', '-r', 'ext/cat1js/extjs/monaco-editor', self.m_buildDir + BUILDER_EXTJS_FOLDER] )
 
     def _run( self ) :
         # run using simplehttpserver

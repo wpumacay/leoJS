@@ -1,0 +1,43 @@
+<html>
+    <head>
+
+        <title>cat1js</title>
+
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"/> -->
+        
+        <link rel="stylesheet" type="text/css" href="extjs/datgui/build/dat.gui.css">
+        <link rel="stylesheet" type="text/css" href="playground.css" />
+
+        <style>
+            body 
+            {
+                margin: 0;
+                padding: 0;
+                background-color: #000000;
+            }
+        </style>    
+
+        <!-- Include libs -->
+        <script type = "text/javascript" src = "extjs/datgui/build/dat.gui.js"></script>
+        <script type = "text/javascript" src = "ext/cat1js/LCommon.js"></script>
+        <script type = "text/javascript" src = "ext/cat1js/LAssets.js"></script>
+        <script type = "text/javascript" src = "RAssets.js"></script>
+        <script type = "text/javascript" src = "RBoot.js"></script>
+        <script type = "text/javascript" src = "REntryPoint.js"></script>
+        
+    </head>
+    <body>
+
+<!--         <div id="navbar">
+            <button type="button" id="btnRun">Run</button>
+        </div> -->
+        <canvas id="glCanvas"></canvas>
+        <div id="containerEditor"></div>
+
+        <script type = "text/javascript">leojs.REntryPoint.begin();</script>
+
+        <script src="extjs/monaco-editor/min/vs/loader.js"> </script>
+        <script src="playgroundEntryPoint.js"> </script>
+    </body>
+</html>
