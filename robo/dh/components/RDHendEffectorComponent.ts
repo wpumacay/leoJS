@@ -56,6 +56,22 @@ namespace leojs
             this._initializeEndEffector();
         }
 
+        public release() : void
+        {
+            this.m_effRootMesh = null;
+            this.m_effLeftMesh = null;
+            this.m_effRighttMesh = null;
+
+            this.m_transformBase = null;
+            this.m_leftGripTotalTransform = null;
+            this.m_rightGripTotalTransform = null;
+
+            this.m_leftGripTotalTransformToRoot = null;
+            this.m_rightGripTotalTransformToRoot = null;
+
+            super.release();
+        }
+
         private _initializeEndEffector() : void
         {
             this.m_effRootMesh = buildPrimitive( { 'shape' : 'box',

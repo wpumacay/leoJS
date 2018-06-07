@@ -32,6 +32,11 @@ namespace leojs
             this.m_classId = RComponent.CLASS_ID;
         }
 
+        public release() : void
+        {
+            this.m_parent = null;
+        }
+
         public typeId() : RComponentType { return this.m_typeId; }
         public classId() : string { return this.m_classId; }
 

@@ -30,6 +30,16 @@ namespace leojs
             this._initializePrismaticJoint();
         }
 
+        public release() : void
+        {
+            this.m_jointFixedMeshRef = null;
+            this.m_jointMovingMeshRef = null;
+            this.m_jointTransformBase = null;
+            this.m_jointTransformTotal = null;
+
+            super.release();
+        }
+
         private _initializePrismaticJoint() : void
         {
             this.m_jointFixedMeshRef = buildPrimitive( { 'shape' : 'box',

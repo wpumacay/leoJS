@@ -94,9 +94,24 @@ namespace leojs
 
         public update( dt : number ) : void
         {
-            for ( let _entity of this.m_entities )
+            for ( let q = 0; q < this.m_entities.length; q++ )
             {
-                _entity.update( dt );
+                let _entity = this.m_entities[q];
+                
+                if ( !_entity )
+                {
+                    continue;
+                }
+
+                if ( _entity.deletionRequested )
+                {
+                    // TODO: Clear the null references from the entities list
+                    _entity.release();
+                }
+                else
+                {
+                    _entity.update( dt );
+                }
             }
         }
     }

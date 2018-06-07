@@ -26,6 +26,22 @@ namespace leojs
             this._init();
         }
 
+        public release() : void
+        {
+            if ( this.m_meshes )
+            {
+                for ( let key in this.m_meshes )
+                {
+                    this.m_meshes[key] = null;
+                }
+                this.m_meshes = null;
+            }
+            
+            this.m_kinTreeRef = null;
+
+            super.release();
+        }
+
         private _init() : void
         {
             this._initializeLinks();

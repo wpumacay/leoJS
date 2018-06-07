@@ -46,11 +46,14 @@ namespace leojs
             if ( this.m_robotId == RobotId.SCARA )
             {
                 this.m_dhModel = new RDHmodelScara( this );
+                this.m_dhModel.init();
+                
                 this.m_manipulatorRef = null;// TODO: Find a sexy scara urdf :3
             }
             else if ( this.m_robotId == RobotId.KUKA_KR210 )
             {
                 this.m_dhModel = new RDHmodelKukaKR210( this );
+                this.m_dhModel.init();
 
                 let _urdfData = core.LAssetsManager.INSTANCE.getTextAsset( 'kr210_urdf' );
                 this.m_manipulatorRef = new RManipulator( _urdfData );

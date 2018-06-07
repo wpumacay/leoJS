@@ -30,6 +30,11 @@ namespace leojs
             this.m_controller = null;
         }
 
+        public release() : void
+        {
+            this.m_controller = null;
+        }
+
         public assignController( controller : dat.GUIController ) : void { this.m_controller = controller; }
         public controller() : dat.GUIController { return this.m_controller; }
         public name() : string { return this.m_name; }
@@ -47,6 +52,13 @@ namespace leojs
             this.m_type = UItype.BUTTON;
 
             this.m_callback = fcnCallback;
+        }
+
+        public release() : void
+        {
+            this.m_callback = null;
+
+            super.release();
         }
 
         public callback() : Function { return this.m_callback; }
@@ -88,6 +100,13 @@ namespace leojs
             this.m_onChangeCallback = onChangeCallback;
         }
 
+        public release() : void
+        {
+            this.m_onChangeCallback = null;
+
+            super.release();
+        }
+
         public min() : number { return this.m_min; }
         public max() : number { return this.m_max; }
         public initValue() : number { return this.m_current; }
@@ -122,6 +141,18 @@ namespace leojs
             this.m_children = [];
         }
 
+        public release() : void
+        {
+            if ( this.m_children )
+            {
+                for ( let q = 0; q < this.m_children.length; q++ )
+                {
+                    this.m_children[q] = null;
+                }
+                this.m_children = null;
+            }
+        }
+
         public addChild( child : RUIelement ) : void
         {
             this.m_children.push( child );
@@ -143,6 +174,32 @@ namespace leojs
             this.m_uiDef = {};
             this.m_uiElements = [];
             this.m_uiStorage = {};
+        }
+
+        public release() : void
+        {
+            this.m_dgui = null;
+            this.m_uiDef = null;
+
+            if ( this.m_uiElements )
+            {
+                for ( let q = 0; q < this.m_uiElements.length; q++ )
+                {
+                    this.m_uiElements[q].release();
+                    this.m_uiElements[q] = null;
+                }
+                this.m_uiElements = null;
+            }
+
+            if ( this.m_uiStorage )
+            {
+                for ( let key in this.m_uiStorage )
+                {
+                    this.m_uiStorage[key] = null;
+                }
+                this.m_uiStorage = null;
+            }
+                
         }
 
         public appendUIelement( uiElement : RUIelement ) : void
@@ -286,6 +343,24 @@ namespace leojs
 
             this._initializeUI();
             this._initializeControllers();
+        }
+
+        public release() : void
+        {
+            if ( this.m_uiWrapper )
+            {
+                this.m_uiWrapper.release();
+                this.m_uiWrapper = null;
+            }
+
+            if ( this.m_dgui )
+            {
+                this.m_dgui.destroy();
+                this.m_dgui = null;
+            }
+
+            this.m_dhModel = null;
+            this.m_dhTable = null;
         }
 
         private _initializeUI() : void

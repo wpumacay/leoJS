@@ -72,6 +72,13 @@ namespace leojs
             this._updateTransform();
         }
 
+        public release() : void
+        {
+            this.m_fixed = null;
+            this.m_values = null;
+            this.m_transform = null;
+        }
+
         public jointId() : string { return this.m_jointId; }
         public fixed() : boolean[] { return this.m_fixed; }
         public values() : number[] { return this.m_values; }
@@ -179,6 +186,32 @@ namespace leojs
             this.m_totalTransform = new core.LMat4();
             this.m_xyz = new core.LVec3( 0, 0, 0 );
             this.m_rpy = new core.LVec3( 0, 0, 0 );
+        }
+
+        public release() : void
+        {
+            if ( this.m_entries )
+            {
+                for ( let q = 0; q < this.m_entries.length; q++ )
+                {
+                    this.m_entries[q].release();
+                    this.m_entries[q] = null;
+                }
+                this.m_entries = null;
+            }
+                
+            if ( this.m_entriesById )
+            {
+                for ( let key in this.m_entriesById )
+                {
+                    this.m_entriesById[key] = null;
+                }
+                this.m_entriesById = null;
+            }
+
+            this.m_totalTransform = null;
+            this.m_xyz = null;
+            this.m_rpy = null;
         }
 
         public appendEntry( entry : RDHentry ) : void

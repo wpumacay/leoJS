@@ -63,6 +63,22 @@ namespace leojs
             this._updateGraphicsOrientation();
         }
 
+        public release() : void
+        {
+            this.m_posXYZ = null;
+            this.m_rotEuler = null;
+            this.m_rotMat = null;
+            this.m_frameMatrix = null;
+            this.m_axisX = null;
+            this.m_axisY = null;
+            this.m_axisZ = null;
+            this.m_rotArrowX = null;
+            this.m_rotArrowY = null;
+            this.m_rotArrowZ = null;
+
+            super.release();
+        }
+
         private _initGraphics() : void
         {
             // Axes made by arrows, ...

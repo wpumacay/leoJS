@@ -55,12 +55,68 @@ namespace leojs
 
             this.m_endEffectorTotalTransform = new core.LMat4();
             this.m_endEffectorCompensation = new core.LMat4();
+        }
 
+        public init() : void
+        {
             this._buildDHrepresentation();
             this._buildModel();
             this._computeEndEffectorOffset();
             this._computeMinMaxEstimates();
             this._computeXYZzeroPosition();
+        }
+
+        public release() : void
+        {
+            if ( this.m_dhTable )
+            {
+                this.m_dhTable.release();
+                this.m_dhTable = null;
+            }
+
+            // The World is in charge of removing the entities
+            // Just remove the references here
+
+            if ( this.m_frames )
+            {
+                for ( let q = 0; q < this.m_frames.length; q++ )
+                {
+                    this.m_frames[q].deletionRequested = true;
+                    this.m_frames[q] = null;
+                }
+                this.m_frames = null;
+            }
+
+            if ( this.m_joints )
+            {
+                for ( let q = 0; q < this.m_joints.length; q++ )
+                {
+                    this.m_joints[q].deletionRequested = true;
+                    this.m_joints[q] = null;
+                }
+                this.m_joints = null;
+            }
+
+            if ( this.m_endEffector )
+            {
+                this.m_endEffector.deletionRequested = true;
+                this.m_endEffector = null;
+            }
+
+            if ( this.m_base )
+            {
+                this.m_base.deletionRequested = true;
+                this.m_base = null;
+            }
+            
+            this.m_endEffectorCompensation = null;
+            this.m_endEffectorTotalTransform = null;
+            this.m_world = null;
+
+            this.m_xyzMinEstimate = null;
+            this.m_xyzMaxEstimate = null;
+            this.m_xyzZeroPosition = null;
+            this.m_rpyZeroPosition = null;
         }
 
         protected abstract _buildDHrepresentation() : void;

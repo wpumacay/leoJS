@@ -13,14 +13,31 @@ namespace leojs
         public position : core.LVec3;
         public rotation : core.LVec3;// Euler angles
 
+        public deletionRequested : boolean;
+
         protected m_components : { [id:number] : RComponent };
 
         constructor()
         {
             this.position = new core.LVec3( 0, 0, 0 );
             this.rotation = new core.LVec3( 0, 0, 0 );
+
+            this.deletionRequested = false;
             
             this.m_components = {};
+        }
+
+        public release()
+        {
+            if ( this.m_components )
+            {
+                for ( let key in this.m_components )
+                {
+                    this.m_components[key].release();
+                    this.m_components[key] = null;
+                }
+                this.m_components = null;
+            }
         }
 
         public addComponent( component : RComponent ) : void
@@ -47,6 +64,11 @@ namespace leojs
 
         public update( dt : number ) : void
         {
+            if ( !this.m_components )
+            {
+                return;
+            }
+
             for ( let _key in this.m_components )
             {
                 this.m_components[ _key ].update( dt );
@@ -55,6 +77,11 @@ namespace leojs
 
         public setVisibility( visible : boolean ) : void
         {
+            if ( !this.m_components )
+            {
+                return;
+            }
+
             if ( this.m_components[ RComponentType.GRAPHICS ] )
             {
                 let _graphics = <RGraphicsComponent> this.m_components[ RComponentType.GRAPHICS ];

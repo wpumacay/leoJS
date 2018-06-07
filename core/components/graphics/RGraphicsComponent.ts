@@ -23,6 +23,16 @@ namespace leojs
             this.m_renderables = [];
         }
 
+        public release() : void
+        {
+            for ( let q = 0; q < this.m_renderables.length; q++ )
+            {
+                this.m_renderables[q].release();
+            }
+
+            super.release();
+        }
+
         public renderables() : core.LIRenderable[] { return this.m_renderables; }
         public update( dt : number )
         {

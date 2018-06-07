@@ -89,6 +89,26 @@ namespace leojs
             this.m_geometry = null;
         }
 
+        public release() : void
+        {
+            this.m_parentJoint = null;
+
+            if ( this.m_childrenJoints )
+            {
+                for ( let q = 0; q < this.m_childrenJoints.length; q++ )
+                {
+                    this.m_childrenJoints[q] = null;
+                }
+                this.m_childrenJoints = null;
+            }
+
+            this.m_localTransform = null;
+            this.m_linkTransform = null;
+            this.m_worldTransform = null;
+
+            this.m_geometry = null;
+        }
+
         public initNode( lxyz : core.LVec3,
                          lrpy : core.LVec3,
                          geometryProperties : { [id:string] : any } ) : void
@@ -184,6 +204,20 @@ namespace leojs
             this.m_jointTransform = new core.LMat4();
         }
 
+        public release() : void
+        {
+            this.m_parent = null;
+            this.m_child = null;
+
+            this.m_xyz = null;
+            this.m_rpy = null;
+            this.m_axis = null;
+
+            this.m_jointBaseTransform = null;
+            this.m_jointVariableTransform = null;
+            this.m_jointTransform = null;
+        }
+
         public initJoint( jxyz : core.LVec3, 
                           jrpy : core.LVec3,
                           axis : core.LVec3,
@@ -264,6 +298,31 @@ namespace leojs
             this.m_rootNode = null;
             this.m_kinNodes = {};
             this.m_kinJoints = {};
+        }
+
+        public release() : void
+        {
+            if ( this.m_kinNodes )
+            {
+                for ( let key in this.m_kinNodes )
+                {
+                    this.m_kinNodes[key].release();
+                    this.m_kinNodes[key] = null;
+                }
+                this.m_kinNodes = null;
+            }
+
+            if ( this.m_kinJoints )
+            {
+                for ( let key in this.m_kinJoints )
+                {
+                    this.m_kinJoints[key].release();
+                    this.m_kinJoints[key] = null;
+                }
+                this.m_kinJoints = null;
+            }
+
+            this.m_rootNode = null;
         }
 
         public setRootNode( node : RKinNode ) 

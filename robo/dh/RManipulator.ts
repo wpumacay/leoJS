@@ -27,6 +27,17 @@ namespace leojs
             this._initTreeModel();
         }
 
+        public release() : void
+        {
+            if ( this.m_kinTree )
+            {
+                this.m_kinTree.release();
+                this.m_kinTree = null;
+            }
+
+            this.m_treeModelRef = null;
+        }
+
         private _initKinTree( urdfStr : string ) : void
         {
             // Build kintree from urdf

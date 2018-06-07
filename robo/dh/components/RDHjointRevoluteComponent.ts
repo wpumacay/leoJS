@@ -28,6 +28,15 @@ namespace leojs
             this._initializeRevoluteJoint();
         }
 
+        public release() : void
+        {
+            this.m_jointMeshRef = null;
+            this.m_jointRotMatBase = null;
+            this.m_jointRotMatTotal = null;
+
+            super.release();
+        }
+
         private _initializeRevoluteJoint() : void
         {
             this.m_jointMeshRef = buildPrimitive( { 'shape' : 'cylinder',
