@@ -14,7 +14,7 @@ var MonacoEditor = null;
 //     // Create inverse kinematics here
 // }
 
-var EDITOR_CONTAINER_ID = 'containerEditor';
+var EDITOR_CONTAINER_ID = 'editorDiv';
 var EDITOR_DEFAULT_SNIPPET = [ 'function hello() {',
                                '\tconsole.log( "Hello World" );',
                                '}' ].join( '\n' );

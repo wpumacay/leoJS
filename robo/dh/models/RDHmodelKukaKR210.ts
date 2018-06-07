@@ -280,49 +280,49 @@ namespace leojs
         {
             super.update( dt );
 
-            let _test = true;
+            // let _test = true;
 
-            if ( _test )
-            {
-                // Copy the EEffector position
-                core.LVec3.copy( this.m_ikEEPosRef, this.m_endEffector.position );
-                // Compute rotation matrix of the end effector
-                core.LMat4.fromEulerInPlace( this.m_ikEErotMat, this.m_endEffector.rotation );
+            // if ( _test )
+            // {
+            //     // Copy the EEffector position
+            //     core.LVec3.copy( this.m_ikEEPosRef, this.m_endEffector.position );
+            //     // Compute rotation matrix of the end effector
+            //     core.LMat4.fromEulerInPlace( this.m_ikEErotMat, this.m_endEffector.rotation );
 
-                // Compute wrist orientation - last frame
-                core.mulMatMat44InPlace( this.m_ikWCrotMat,
-                                         this.m_ikEErotMat,
-                                         this.m_ikEEtoWCinvrot );
+            //     // Compute wrist orientation - last frame
+            //     core.mulMatMat44InPlace( this.m_ikWCrotMat,
+            //                              this.m_ikEErotMat,
+            //                              this.m_ikEEtoWCinvrot );
 
-                // Compute wrist position - last frame
-                // From : r_ee = r_wc + R_0_6 * [ 0, 0, d_ee ]
-                this.m_ikWCPosRef.x = this.m_ikEEPosRef.x -
-                                        ( this.m_ikWCrotMat.buff[0] * this.m_eeOffset.x +
-                                          this.m_ikWCrotMat.buff[4] * this.m_eeOffset.y +
-                                          this.m_ikWCrotMat.buff[8] * this.m_eeOffset.z );
+            //     // Compute wrist position - last frame
+            //     // From : r_ee = r_wc + R_0_6 * [ 0, 0, d_ee ]
+            //     this.m_ikWCPosRef.x = this.m_ikEEPosRef.x -
+            //                             ( this.m_ikWCrotMat.buff[0] * this.m_eeOffset.x +
+            //                               this.m_ikWCrotMat.buff[4] * this.m_eeOffset.y +
+            //                               this.m_ikWCrotMat.buff[8] * this.m_eeOffset.z );
 
-                this.m_ikWCPosRef.y = this.m_ikEEPosRef.y -
-                                        ( this.m_ikWCrotMat.buff[1] * this.m_eeOffset.x +
-                                          this.m_ikWCrotMat.buff[5] * this.m_eeOffset.y +
-                                          this.m_ikWCrotMat.buff[9] * this.m_eeOffset.z );
+            //     this.m_ikWCPosRef.y = this.m_ikEEPosRef.y -
+            //                             ( this.m_ikWCrotMat.buff[1] * this.m_eeOffset.x +
+            //                               this.m_ikWCrotMat.buff[5] * this.m_eeOffset.y +
+            //                               this.m_ikWCrotMat.buff[9] * this.m_eeOffset.z );
 
-                this.m_ikWCPosRef.z = this.m_ikEEPosRef.z -
-                                        ( this.m_ikWCrotMat.buff[2] * this.m_eeOffset.x +
-                                          this.m_ikWCrotMat.buff[6] * this.m_eeOffset.y +
-                                          this.m_ikWCrotMat.buff[10] * this.m_eeOffset.z );
+            //     this.m_ikWCPosRef.z = this.m_ikEEPosRef.z -
+            //                             ( this.m_ikWCrotMat.buff[2] * this.m_eeOffset.x +
+            //                               this.m_ikWCrotMat.buff[6] * this.m_eeOffset.y +
+            //                               this.m_ikWCrotMat.buff[10] * this.m_eeOffset.z );
 
-                if ( this.m_visibility )
-                {
-                    engine3d.DebugSystem.drawLine( core.ORIGIN,
-                                                   this.m_ikEEPosRef,
-                                                   core.YELLOW );
+            //     if ( this.m_visibility )
+            //     {
+            //         engine3d.DebugSystem.drawLine( core.ORIGIN,
+            //                                        this.m_ikEEPosRef,
+            //                                        core.YELLOW );
 
-                    engine3d.DebugSystem.drawLine( core.ORIGIN,
-                                                   this.m_ikWCPosRef,
-                                                   core.MAGENTA );
-                }
+            //         engine3d.DebugSystem.drawLine( core.ORIGIN,
+            //                                        this.m_ikWCPosRef,
+            //                                        core.MAGENTA );
+            //     }
 
-            }
+            // }
         }
     }
 

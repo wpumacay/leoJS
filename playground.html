@@ -5,7 +5,7 @@
 
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
         <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"/> -->
-        
+
         <link rel="stylesheet" type="text/css" href="extjs/datgui/build/dat.gui.css">
         <link rel="stylesheet" type="text/css" href="playground.css" />
 
@@ -25,15 +25,20 @@
         <script type = "text/javascript" src = "RAssets.js"></script>
         <script type = "text/javascript" src = "RBoot.js"></script>
         <script type = "text/javascript" src = "REntryPoint.js"></script>
+
+        <script type = "text/javascript" src = "playgroundNavbar.js"></script>
         
     </head>
     <body>
 
-<!--         <div id="navbar">
-            <button type="button" id="btnRun">Run</button>
-        </div> -->
         <canvas id="glCanvas"></canvas>
-        <div id="containerEditor"></div>
+        <div id="containerEditor">
+            <div id="navbar">
+                <button type="button" id="btnRun" onclick="onButtonRun()">Run</button>
+            </div>
+            <div id="editorDiv" ></div>
+        </div>
+
 
         <script type = "text/javascript">leojs.REntryPoint.begin();</script>
 

@@ -15,7 +15,8 @@ BUILDER_RESOURCES_FOLDER = 'res' # assets
 BUILDER_EXTJS_FOLDER = 'extjs' # extra js libraries
 # Add here the extra files you want to copy to the build dir
 BUILDER_EXTRA_FILES_LIST = [ 'playgroundEntryPoint.js',
-                             'playground.css' ]
+                             'playground.css',
+                             'playgroundNavbar.js' ]
 
 MODE_BUILD_ONLY = 'build'
 MODE_BUILD_AND_RUN = 'all'
