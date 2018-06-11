@@ -9,6 +9,7 @@
 /// <reference path="entities/RTestEntity.ts" />
 
 /// <reference path="../robo/dh/RDHWorld.ts" />
+/// <reference path="../robo/dh/RDHWorldPlayground.ts" />
 
 namespace leojs
 {
@@ -74,10 +75,16 @@ namespace leojs
         public init() : void
         {
             // Initialize stuff here
+
             // this.m_world = new RWorld( this.m_gApp.width(), this.m_gApp.height() );
-            this.m_world = new RDHWorld( this.m_gApp.width(), 
-                                         this.m_gApp.height(),
-                                         RobotId.KUKA_KR210 );
+
+            // this.m_world = new RDHWorldDemo( this.m_gApp.width(), 
+            //                                  this.m_gApp.height(),
+            //                                  RobotId.KUKA_KR210 );
+
+            this.m_world = new RDHWorldPlayground( this.m_gApp.width(), 
+                                                   this.m_gApp.height() );
+
             this.m_gApp.addScene( this.m_world.scene() );
 
             // this.m_testEntity = new RTestEntity();
@@ -118,6 +125,8 @@ namespace leojs
                 this.m_world.resizeWorld( appWidth, appHeight );
             }
         }
+
+        public world() : RWorld { return this.m_world; }
 
         private m_testEntity : RTestEntity;
 

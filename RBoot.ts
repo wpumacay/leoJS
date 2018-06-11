@@ -71,6 +71,7 @@ namespace leojs
         'robo/dh/components/RDHjointRevoluteComponent.js',
         'robo/dh/components/RDHtreeModelComponent.js',
         'robo/dh/RDHmodel.js',
+        'robo/dh/models/RDHrobot.js',
         'robo/dh/models/RDHmodelScara.js',
         'robo/dh/models/RDHmodelKukaKR210.js',
         'robo/dh/ui/RDHguiController.js',
@@ -78,6 +79,8 @@ namespace leojs
         'robo/dh/RUrdfModelParser.js',
         'robo/dh/RManipulator.js',
         'robo/dh/RDHWorld.js',
+        'robo/dh/RDHWorldDemo.js',
+        'robo/dh/RDHWorldPlayground.js',
         // --------------------------------
         'core/RApp.js',
         'main.js'

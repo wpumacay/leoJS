@@ -119,9 +119,6 @@ namespace leojs
             this.m_rpyZeroPosition = null;
         }
 
-        protected abstract _buildDHrepresentation() : void;
-        protected abstract _computeMinMaxEstimates() : void;
-
         public xyzMinEstimate() : core.LVec3 { return this.m_xyzMinEstimate; }
         public xyzMaxEstimate() : core.LVec3 { return this.m_xyzMaxEstimate; }
         public xyzZeroPosition() : core.LVec3 { return this.m_xyzZeroPosition; }
@@ -139,8 +136,6 @@ namespace leojs
             core.LMat4.extractPositionInPlace( this.m_xyzZeroPosition, this.m_endEffectorTotalTransform );
             core.LMat4.extractEulerFromRotationInPlace( this.m_rpyZeroPosition, this.m_endEffectorTotalTransform );
         }
-
-        protected abstract _computeEndEffectorOffset() : void;
 
         private _buildModel() : void
         {
@@ -282,17 +277,70 @@ namespace leojs
             return this.m_dhTable.getEndEffectorXYZ().clone();
         }
 
+        /**
+        *    IK solver manipulator-specific implementation. 
+        *    Implement inverse kinematics computation here
+        *
+        *    @method inverse
+        *    @param {core.LVec3} xyz requested position
+        *    @param {core.LVec3} rpy requested orientation
+        *    
+        */
         public abstract inverse( xyz : core.LVec3, rpy : core.LVec3 ) : number[];
-        public abstract isInWorkspace( xyz : core.LVec3 ) : boolean;
-        public abstract includeInvKinEndEffectorOrientation() : boolean;
+
+        /**
+        *    Initialize the end effector compensation matrix to take ...
+        *    into account the end effector orientation relative to the ...
+        *    manipulator's last DH joint frame
+        *    
+        *    @method _computeEndEffectorOffset
+        */
+        protected abstract _computeEndEffectorOffset() : void;
+
+        /**
+        *    Define the DH-table here
+        *
+        *    @method _buildDHrepresentation
+        */
+        protected abstract _buildDHrepresentation() : void;
+
+        /**
+        *    Define the min-max estimates here, just as a hint ...
+        *    for the ranges for the UI controls
+        *
+        *    @method _computeMinMaxEstimates
+        */
+        protected abstract _computeMinMaxEstimates() : void;
+
+        /**
+        *    Robot specific method to check if roll-pitch-yaw is actually ...
+        *    used by the robot-specific IK solver. Used only by the UI to ...
+        *    create or not the RollPitchYaw controls
+        *
+        *    @method isInWorkspace
+        *    @param {core.LVec3} xyz position to be evaluated
+        */
+        public includeInvKinEndEffectorOrientation() : boolean
+        {
+            // Override this
+            return true;
+        }
+
+        /**
+        *    Robot specific method to check if in workspace
+        *
+        *    @method isInWorkspace
+        *    @param {core.LVec3} xyz position to be evaluated
+        */
+        public isInWorkspace( xyz : core.LVec3 ) : boolean 
+        { 
+            // Override this
+            return false; 
+        }
 
         public update( dt : number ) : void
         {
             this.m_time += dt * 0.001;
-
-            // this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 0 ) + dt * 0.00025, 0 );
-            // this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 1 ) + dt * 0.00025, 1 );
-            // this.m_dhTable.setJointValue( 2.5 * ( Math.sin( this.m_time * 0.5 ) + 1 ) , 2 );
 
             // Update internal states of the robot representation
             this.m_dhTable.update( dt );
@@ -300,7 +348,10 @@ namespace leojs
             this._updateModel();
         }
 
-        public getDHtable() : RDHtable { return this.m_dhTable; }
+        public getDHtable() : RDHtable 
+        { 
+            return this.m_dhTable; 
+        }
 
         public getJointValueById( jointId : string ) : number
         {

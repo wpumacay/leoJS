@@ -96,21 +96,21 @@ namespace leojs
         {
             for ( let q = 0; q < this.m_entities.length; q++ )
             {
-                let _entity = this.m_entities[q];
-                
-                if ( !_entity )
+                if ( !this.m_entities[q] )
                 {
                     continue;
                 }
 
-                if ( _entity.deletionRequested )
+                if ( this.m_entities[q].deletionRequested )
                 {
                     // TODO: Clear the null references from the entities list
-                    _entity.release();
+                    this.m_entities[q].release();
+                    this.m_entities.splice( q, 1 );
+                    q--;
                 }
                 else
                 {
-                    _entity.update( dt );
+                    this.m_entities[q].update( dt );
                 }
             }
         }

@@ -79,6 +79,25 @@ namespace leojs
             }
         }
 
+        protected _computeEndEffectorOffset() : void
+        {
+            // TODO: Re-route this part to be user assignable
+        }
+
+        protected _computeMinMaxEstimates() : void
+        {
+            // TODO: Re-route this part to be user assignable
+        }
+
+        public inverse( xyz : core.LVec3, rpy : core.LVec3 ) : number[]
+        {
+            return [];
+        }
+
+
+
+        // Some helpers ********************************************************************
+
         private _getDefaultJointMin( jointType : string ) : number
         {
             let _min = -1;
@@ -125,30 +144,7 @@ namespace leojs
             return _max;
         }
 
-        public includeInvKinEndEffectorOrientation() : boolean
-        {
-            return false;
-        }
-
-        protected _computeEndEffectorOffset() : void
-        {
-
-        }
-
-        protected _computeMinMaxEstimates() : void
-        {
-
-        }
-
-        public inverse( xyz : core.LVec3, rpy : core.LVec3 ) : number[]
-        {
-            return [];
-        }    
-
-        public isInWorkspace( xyz : core.LVec3 ) : boolean
-        {
-            return false;
-        }
+        // *********************************************************************************
     }
 
 

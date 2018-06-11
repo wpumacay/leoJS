@@ -25,9 +25,14 @@ namespace leojs
 
         public release() : void
         {
-            for ( let q = 0; q < this.m_renderables.length; q++ )
+            if ( this.m_renderables )
             {
-                this.m_renderables[q].release();
+                for ( let q = 0; q < this.m_renderables.length; q++ )
+                {
+                    this.m_renderables[q].requestDeletion();
+                    this.m_renderables[q] = null;;
+                }
+                this.m_renderables = null;
             }
 
             super.release();

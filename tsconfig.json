@@ -75,6 +75,7 @@
     "robo/dh/components/RDHjointRevoluteComponent.ts",
     "robo/dh/components/RDHtreeModelComponent.ts",
     "robo/dh/RDHmodel.ts",
+    "robo/dh/models/RDHrobot.ts",
     "robo/dh/models/RDHmodelScara.ts",
     "robo/dh/models/RDHmodelKukaKR210.ts",
     "robo/dh/ui/RDHguiController.ts",
@@ -82,6 +83,8 @@
     "robo/dh/RUrdfModelParser.ts",
     "robo/dh/RManipulator.ts",
     "robo/dh/RDHWorld.ts",
+    "robo/dh/RDHWorldDemo.ts",
+    "robo/dh/RDHWorldPlayground.ts",
     // --------------------------------
     "RAssets.ts",
     "core/RApp.ts",

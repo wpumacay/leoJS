@@ -112,6 +112,9 @@ class RBuilder :
         # copy resources folder
         sp.call( ['cp', '-r', BUILDER_RESOURCES_FOLDER, self.m_buildDir] )
 
+        # copy playground resources
+        sp.call( ['cp', '-r', 'snippets/', self.m_buildDir] )
+
         # Copy resources from cat1js
         sp.call( ['cp', '-r', 'ext/cat1js/res/imgs', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
         sp.call( ['cp', '-r', 'ext/cat1js/res/models', self.m_buildDir + BUILDER_RESOURCES_FOLDER] )
