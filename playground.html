@@ -34,7 +34,12 @@
         <canvas id="glCanvas"></canvas>
         <div id="containerEditor">
             <div id="navbar">
-                <button type="button" id="btnRun" onclick="onButtonRun()">Run</button>
+                <button type="button" id="btnRun" onclick="onButtonRun()">Run Script</button>
+                <button type="button" id="btnClear" onclick="onButtonClean()">Clean Scene</button>
+                <select id="listDHsamples" onchange="onListDHchanged()">
+                    <option value="DH_KUKA_KR210">KUKA KR210</option>
+                    <option value="DH_SCARA">SCARA</option>
+                </select>
             </div>
             <div id="editorDiv" ></div>
         </div>

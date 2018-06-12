@@ -24,6 +24,7 @@ namespace leojs
             super( appWidth, appHeight );
 
             this.m_robotId = robotId;
+            this.m_worldId = 'DEMO';
         }
 
         public init()

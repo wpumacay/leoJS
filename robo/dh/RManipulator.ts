@@ -36,6 +36,8 @@ namespace leojs
             }
 
             this.m_treeModelRef = null;
+
+            super.release();
         }
 
         private _initKinTree( urdfStr : string ) : void

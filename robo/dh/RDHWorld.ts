@@ -14,6 +14,7 @@ namespace leojs
         protected m_dhModel : RDHmodel;
         protected m_urdfModel : RManipulator;
         protected m_uiController : RDHguiController;
+        protected m_worldId : string;
 
         constructor( appWidth : number, appHeight : number )
         {
@@ -22,11 +23,17 @@ namespace leojs
             this.m_dhModel = null;
             this.m_urdfModel = null;
             this.m_uiController = null;
+            this.m_worldId = '';
         }
 
         public init() : void
         {
             // Override this - Initialize some needed stuff here
+        }
+
+        public getWorldId() : string 
+        { 
+            return this.m_worldId; 
         }
 
         private _drawFloorGrid() : void

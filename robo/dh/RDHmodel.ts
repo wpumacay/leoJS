@@ -35,6 +35,7 @@ namespace leojs
         protected m_xyzZeroPosition : core.LVec3;
         protected m_rpyZeroPosition : core.LVec3;
 
+        protected m_showEndEffector : boolean;
         protected m_visibility : boolean;
 
         constructor( world : RDHWorld )
@@ -51,6 +52,7 @@ namespace leojs
             this.m_xyzZeroPosition = new core.LVec3( 0, 0, 0 );
             this.m_rpyZeroPosition = new core.LVec3( 0, 0, 0 );
 
+            this.m_showEndEffector = true;
             this.m_visibility = true;
 
             this.m_endEffectorTotalTransform = new core.LMat4();
@@ -246,6 +248,8 @@ namespace leojs
                 }
             }
 
+            this.m_endEffector.setVisibility( this.m_showEndEffector );
+
             // Update end effector
             core.mulMatMat44InPlace( this.m_endEffectorTotalTransform,
                                      this.m_dhTable.getFullTransform(),
@@ -353,6 +357,11 @@ namespace leojs
             return this.m_dhTable; 
         }
 
+        public getWorld() : RDHWorld
+        {
+            return this.m_world;
+        }
+
         public getJointValueById( jointId : string ) : number
         {
             return this.m_dhTable.getJointValueById( jointId );
@@ -398,7 +407,10 @@ namespace leojs
 
             if ( this.m_endEffector )
             {
-                this.m_endEffector.setVisibility( visible );
+                if ( this.m_showEndEffector )
+                {
+                    this.m_endEffector.setVisibility( visible );
+                }
             }
 
             if ( this.m_base )

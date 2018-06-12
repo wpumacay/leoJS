@@ -18,6 +18,10 @@ namespace leojs
             super( world );
 
             this.m_userDHtable = userDHtable;
+
+            // Don't show end effector, as user might need ...
+            // to add compensation
+            this.m_showEndEffector = false;
         }
 
         protected _buildDHrepresentation() : void

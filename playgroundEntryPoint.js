@@ -11,7 +11,8 @@ var EDITOR_THEME = 'vs-dark';
 
 var EDITOR_DEFAULT_SETTINGS = { value : EDITOR_DEFAULT_SNIPPET,
                                 language : EDITOR_LANGUAGE,
-                                theme: EDITOR_THEME };
+                                theme: EDITOR_THEME,
+                                fontSize : 10 };
 
 
 var SNIPPETS = 
@@ -54,6 +55,9 @@ function onEditorModulesLoaded()
 
             MonacoEditor = monaco.editor.create( document.getElementById( EDITOR_CONTAINER_ID ),
                                                  EDITOR_DEFAULT_SETTINGS );
+            // Override ctrl+s behavior?
+            MonacoEditor.addCommand( monaco.KeyMod.CtrlCmd |
+                                     monaco.KeyCode.KEY_S, function() {  } );
         }
     };
 
@@ -84,11 +88,11 @@ function loadSnippets()
 
                 if ( areSnippetsLoaded() )
                 {
-                    if ( SNIPPETS['sp_sample_scara']['code'] )
+                    if ( SNIPPETS['sp_sample_kuka_kr210']['code'] )
                     {
                         // Set default snippet
                         EDITOR_DEFAULT_SETTINGS['value'] = 
-                                        SNIPPETS['sp_sample_scara']['code'];
+                                        SNIPPETS['sp_sample_kuka_kr210']['code'];
                     }
 
                     // Load editor resources

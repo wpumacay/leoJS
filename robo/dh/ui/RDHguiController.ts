@@ -330,6 +330,8 @@ namespace leojs
         private m_isDHmodelVisible : boolean;
         private m_isURDFmodelVisible : boolean;
 
+        private m_ikEnabled : boolean;
+
         constructor( dhModel : RDHmodel )
         {
             this.m_dgui = new dat.GUI();
@@ -341,6 +343,9 @@ namespace leojs
             this.m_isDHmodelVisible = true;
             this.m_isURDFmodelVisible = true;
 
+            this.m_ikEnabled = false;
+
+            this._initializeMode();
             this._initializeUI();
             this._initializeControllers();
         }
@@ -361,6 +366,18 @@ namespace leojs
 
             this.m_dhModel = null;
             this.m_dhTable = null;
+        }
+
+        public _initializeMode() : void
+        {
+            if ( this.m_dhModel.getWorld().getWorldId() == 'DEMO' )
+            {
+                this.m_ikEnabled = true;
+            }
+            else if ( this.m_dhModel.getWorld().getWorldId() == 'PLAYGROUND' )
+            {
+                this.m_ikEnabled = false;
+            }
         }
 
         private _initializeUI() : void
@@ -389,49 +406,52 @@ namespace leojs
             // ******************************************************************
 
             // Inverse kinematics ***********************************************
-            let _fInverseKinematics = new RUIfolder( 'Inverse Kinematics' );
-            for ( let q = 0; q < _entries.length; q++ )
+            if ( this.m_ikEnabled )
             {
-                _fInverseKinematics.addChild( new RUItext( 'ik_q' + ( q + 1 ), '0' ) );
+                let _fInverseKinematics = new RUIfolder( 'Inverse Kinematics' );
+                for ( let q = 0; q < _entries.length; q++ )
+                {
+                    _fInverseKinematics.addChild( new RUItext( 'ik_q' + ( q + 1 ), '0' ) );
+                }
+
+                _fInverseKinematics.addChild( new RUIslider( 'ik_x', 
+                                                             this.m_dhModel.xyzMinEstimate().x, 
+                                                             this.m_dhModel.xyzMaxEstimate().x, 
+                                                             this.m_dhModel.xyzZeroPosition().x, 
+                                                             () => { _self.doInverseKinematics(); } ) );
+
+                _fInverseKinematics.addChild( new RUIslider( 'ik_y', 
+                                                             this.m_dhModel.xyzMinEstimate().y, 
+                                                             this.m_dhModel.xyzMaxEstimate().y, 
+                                                             this.m_dhModel.xyzZeroPosition().y, 
+                                                             () => { _self.doInverseKinematics(); } ) );
+
+                _fInverseKinematics.addChild( new RUIslider( 'ik_z', 
+                                                             this.m_dhModel.xyzMinEstimate().z, 
+                                                             this.m_dhModel.xyzMaxEstimate().z, 
+                                                             this.m_dhModel.xyzZeroPosition().z, 
+                                                             () => { _self.doInverseKinematics(); } ) );
+
+                if ( this.m_dhModel.includeInvKinEndEffectorOrientation() )
+                {
+                    // Allow the GUI to control the end effector orientation
+                    _fInverseKinematics.addChild( new RUIslider( 'ik_roll',
+                                                                 -Math.PI, Math.PI,
+                                                                 this.m_dhModel.rpyZeroPosition().x,
+                                                                 () => { _self.doInverseKinematics(); } ) )
+                    _fInverseKinematics.addChild( new RUIslider( 'ik_pitch',
+                                                                 -Math.PI, Math.PI, 
+                                                                 this.m_dhModel.rpyZeroPosition().y,
+                                                                 () => { _self.doInverseKinematics(); } ) )
+                    _fInverseKinematics.addChild( new RUIslider( 'ik_yaw',
+                                                                 -Math.PI, Math.PI, 
+                                                                 this.m_dhModel.rpyZeroPosition().z,
+                                                                 () => { _self.doInverseKinematics(); } ) )
+                }
+                // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
+                this.m_uiWrapper.appendUIelement( _fInverseKinematics );
+                // ******************************************************************
             }
-
-            _fInverseKinematics.addChild( new RUIslider( 'ik_x', 
-                                                         this.m_dhModel.xyzMinEstimate().x, 
-                                                         this.m_dhModel.xyzMaxEstimate().x, 
-                                                         this.m_dhModel.xyzZeroPosition().x, 
-                                                         () => { _self.doInverseKinematics(); } ) );
-
-            _fInverseKinematics.addChild( new RUIslider( 'ik_y', 
-                                                         this.m_dhModel.xyzMinEstimate().y, 
-                                                         this.m_dhModel.xyzMaxEstimate().y, 
-                                                         this.m_dhModel.xyzZeroPosition().y, 
-                                                         () => { _self.doInverseKinematics(); } ) );
-
-            _fInverseKinematics.addChild( new RUIslider( 'ik_z', 
-                                                         this.m_dhModel.xyzMinEstimate().z, 
-                                                         this.m_dhModel.xyzMaxEstimate().z, 
-                                                         this.m_dhModel.xyzZeroPosition().z, 
-                                                         () => { _self.doInverseKinematics(); } ) );
-
-            if ( this.m_dhModel.includeInvKinEndEffectorOrientation() )
-            {
-                // Allow the GUI to control the end effector orientation
-                _fInverseKinematics.addChild( new RUIslider( 'ik_roll',
-                                                             -Math.PI, Math.PI,
-                                                             this.m_dhModel.rpyZeroPosition().x,
-                                                             () => { _self.doInverseKinematics(); } ) )
-                _fInverseKinematics.addChild( new RUIslider( 'ik_pitch',
-                                                             -Math.PI, Math.PI, 
-                                                             this.m_dhModel.rpyZeroPosition().y,
-                                                             () => { _self.doInverseKinematics(); } ) )
-                _fInverseKinematics.addChild( new RUIslider( 'ik_yaw',
-                                                             -Math.PI, Math.PI, 
-                                                             this.m_dhModel.rpyZeroPosition().z,
-                                                             () => { _self.doInverseKinematics(); } ) )
-            }
-            // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
-            this.m_uiWrapper.appendUIelement( _fInverseKinematics );
-            // ******************************************************************
             // Visibility ******************************************************
             let _fVisibility = new RUIfolder( 'Visibility' );
 
@@ -525,15 +545,18 @@ namespace leojs
 
         private _updateIKvalues() : void
         {
-            let _joints : number[] = this.m_dhTable.getAllJointValues();
-
-            // Update joints text UI elements
-            let _entries : RDHentry[] = this.m_dhTable.entries();
-
-            for ( let q = 0; q < _entries.length; q++ )
+            if ( this.m_ikEnabled )
             {
-                let _qText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'ik_q' + ( q + 1 ) );
-                _qText.controller().setValue( '' + _joints[q] );
+                let _joints : number[] = this.m_dhTable.getAllJointValues();
+
+                // Update joints text UI elements
+                let _entries : RDHentry[] = this.m_dhTable.entries();
+
+                for ( let q = 0; q < _entries.length; q++ )
+                {
+                    let _qText : RUItext = <RUItext> this.m_uiWrapper.getElementByName( 'ik_q' + ( q + 1 ) );
+                    _qText.controller().setValue( '' + _joints[q] );
+                }
             }
         }
 

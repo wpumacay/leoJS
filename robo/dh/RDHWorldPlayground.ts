@@ -12,6 +12,8 @@ namespace leojs
         constructor( appWidth : number, appHeight : number )
         {
             super( appWidth, appHeight );
+
+            this.m_worldId = 'PLAYGROUND';
         }
 
         public reset() : void
@@ -25,7 +27,7 @@ namespace leojs
 
             if ( this.m_urdfModel )
             {
-                this.m_urdfModel.release();
+                this.m_urdfModel.deletionRequested = true;
                 this.m_urdfModel = null;
             }
 
@@ -36,7 +38,15 @@ namespace leojs
             }
         }
 
-        public rebuild( userDHtable : { [id:string] : any }[] ) : void
+        /**
+        *    Rebuild models in playground
+        *
+        *    @method rebuild
+        *    @param {Array<Dictionary>} userDHtable DH table
+        *    @param {string?} userURDFfileId urdfFile of the  manipulator. Empty for none
+        */
+        public rebuild( userDHtable : { [id:string] : any }[],
+                        userURDFfileId? : string ) : void
         {
             // Clean previous resources
             this.reset();
@@ -44,6 +54,13 @@ namespace leojs
             // Build new model
             this._buildModel( userDHtable );
             this._buildUI();
+
+            if ( userURDFfileId && userURDFfileId != '' )
+            {
+                let _urdfData = core.LAssetsManager.INSTANCE.getTextAsset( userURDFfileId );
+                this.m_urdfModel = new RManipulator( _urdfData );
+                this.addEntity( this.m_urdfModel );
+            }
         }
 
         private _buildModel( userDHtable : { [id:string] : any }[] ) : void

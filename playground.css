@@ -10,25 +10,25 @@ body {
 
 #containerEditor 
 {
-    border: 3px dotted blue;
+    /*border: 3px dotted blue;*/
     height: 100vh;
     /*width: 49.5vw;*/
-    width: calc(50% - 10px);
+    width: calc(50% - 1px);
     float: left;
 }
 
 #glCanvas
 {
-    border: 3px dotted red;
+    /*border: 3px dotted red;*/
     height: 100vh;
     /*width: 49.5vw;*/
-    width: calc(50% - 10px);
+    width: calc(50% - 1px);
     float: right;
 }
 
 #editorDiv
 {
-    border: 3px dotted green;
+    /*border: 3px dotted green;*/
     height: calc( 100% - 41px );
     width: calc( 100% );
     float: left;
