@@ -24,6 +24,12 @@ var leojs;
             _this._initializeRevoluteJoint();
             return _this;
         }
+        RDHjointRevoluteComponent.prototype.release = function () {
+            this.m_jointMeshRef = null;
+            this.m_jointRotMatBase = null;
+            this.m_jointRotMatTotal = null;
+            _super.prototype.release.call(this);
+        };
         RDHjointRevoluteComponent.prototype._initializeRevoluteJoint = function () {
             this.m_jointMeshRef = leojs.buildPrimitive({ 'shape': 'cylinder',
                 'radius': 0.1,

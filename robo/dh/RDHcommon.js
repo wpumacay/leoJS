@@ -36,6 +36,11 @@ var leojs;
             this.m_rangeJointValue = pMaxJointValue - pMinJointValue;
             this._updateTransform();
         }
+        RDHentry.prototype.release = function () {
+            this.m_fixed = null;
+            this.m_values = null;
+            this.m_transform = null;
+        };
         RDHentry.prototype.jointId = function () { return this.m_jointId; };
         RDHentry.prototype.fixed = function () { return this.m_fixed; };
         RDHentry.prototype.values = function () { return this.m_values; };
@@ -112,6 +117,24 @@ var leojs;
             this.m_xyz = new core.LVec3(0, 0, 0);
             this.m_rpy = new core.LVec3(0, 0, 0);
         }
+        RDHtable.prototype.release = function () {
+            if (this.m_entries) {
+                for (var q = 0; q < this.m_entries.length; q++) {
+                    this.m_entries[q].release();
+                    this.m_entries[q] = null;
+                }
+                this.m_entries = null;
+            }
+            if (this.m_entriesById) {
+                for (var key in this.m_entriesById) {
+                    this.m_entriesById[key] = null;
+                }
+                this.m_entriesById = null;
+            }
+            this.m_totalTransform = null;
+            this.m_xyz = null;
+            this.m_rpy = null;
+        };
         RDHtable.prototype.appendEntry = function (entry) {
             this.m_entries.push(entry);
             this.m_entriesById[entry.jointId()] = entry;

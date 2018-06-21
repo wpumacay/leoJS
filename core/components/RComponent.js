@@ -18,6 +18,9 @@ var leojs;
             this.m_typeId = RComponentType.NEUTRAL;
             this.m_classId = RComponent.CLASS_ID;
         }
+        RComponent.prototype.release = function () {
+            this.m_parent = null;
+        };
         RComponent.prototype.typeId = function () { return this.m_typeId; };
         RComponent.prototype.classId = function () { return this.m_classId; };
         RComponent.prototype.update = function (dt) {

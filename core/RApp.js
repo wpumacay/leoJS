@@ -5,7 +5,8 @@
 /// <reference path="RCommon.ts" />
 /// <reference path="worlds/RWorld.ts" />
 /// <reference path="entities/RTestEntity.ts" />
-/// <reference path="../robo/dh/RDHWorld.ts" />
+/// <reference path="../robo/dh/RDHWorldDemo.ts" />
+/// <reference path="../robo/dh/RDHWorldPlayground.ts" />
 var leojs;
 (function (leojs) {
     var RApp = /** @class */ (function () {
@@ -14,10 +15,8 @@ var leojs;
             this.m_canvas = canvas;
             this.m_gl = glContext;
             this.m_world = null;
-            this.m_testEntity = null;
-            this._initializeGraphicsApp();
         }
-        RApp.prototype._initializeGraphicsApp = function () {
+        RApp.prototype.initializeApp = function () {
             var _textures = leojs.Textures.concat(assets.Textures);
             var _shaders = leojs.Shaders.concat(assets.Shaders);
             var _models = leojs.Models.concat(assets.Models);
@@ -27,45 +26,28 @@ var leojs;
             this.m_gApp.addUserResizeCallback(this._onResize);
         };
         RApp.prototype._onInit = function () {
-            RApp.INSTANCE.init();
+            RApp.INSTANCE._init();
         };
         RApp.prototype._onUpdate = function (dt) {
-            RApp.INSTANCE.update(dt);
+            RApp.INSTANCE._update(dt);
         };
         RApp.prototype._onResize = function (appWidth, appHeight) {
-            RApp.INSTANCE.resizeApp(appWidth, appHeight);
+            RApp.INSTANCE._resizeApp(appWidth, appHeight);
         };
-        RApp.prototype.init = function () {
-            // Initialize stuff here
-            // this.m_world = new RWorld( this.m_gApp.width(), this.m_gApp.height() );
-            this.m_world = new leojs.RDHWorld(this.m_gApp.width(), this.m_gApp.height(), leojs.RobotId.KUKA_KR210);
-            this.m_gApp.addScene(this.m_world.scene());
-            // this.m_testEntity = new RTestEntity();
-            // this.m_world.addEntity( this.m_testEntity );
-            // let q : number;
-            // for ( q = 0; q < 10; q++ )
-            // {
-            //     let _tEntity : RTestEntity = new RTestEntity();
-            //     _tEntity.position.x = ( Math.random() - 0.5 ) * 10.0;
-            //     _tEntity.position.y = ( Math.random() - 0.5 ) * 10.0;
-            //     _tEntity.position.z = ( Math.random() - 0.5 ) * 10.0;
-            //     _tEntity.rotation.x = ( Math.random() - 0.5 ) * Math.PI;
-            //     _tEntity.rotation.y = ( Math.random() - 0.5 ) * Math.PI;
-            //     _tEntity.rotation.z = ( Math.random() - 0.5 ) * Math.PI;
-            //     this.m_world.addEntity( _tEntity );
-            // }
-        };
-        RApp.prototype.update = function (dt) {
-            this.m_world.update(dt);
+        RApp.prototype._update = function (dt) {
+            if (this.m_world) {
+                this.m_world.update(dt);
+            }
             engine3d.DebugSystem.drawLine(core.ORIGIN, new core.LVec3(3, 0, 0), core.RED);
             engine3d.DebugSystem.drawLine(core.ORIGIN, new core.LVec3(0, 3, 0), core.GREEN);
             engine3d.DebugSystem.drawLine(core.ORIGIN, new core.LVec3(0, 0, 3), core.BLUE);
         };
-        RApp.prototype.resizeApp = function (appWidth, appHeight) {
+        RApp.prototype._resizeApp = function (appWidth, appHeight) {
             if (this.m_world) {
                 this.m_world.resizeWorld(appWidth, appHeight);
             }
         };
+        RApp.prototype.world = function () { return this.m_world; };
         RApp.INSTANCE = null;
         return RApp;
     }());

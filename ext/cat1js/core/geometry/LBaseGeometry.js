@@ -8,6 +8,19 @@ var core;
             this.m_vbos = [];
             this.m_ibo = null;
         }
+        LBaseGeometry.prototype.release = function () {
+            if (this.m_vbos) {
+                for (var q = 0; q < this.m_vbos.length; q++) {
+                    this.m_vbos[q].release();
+                    this.m_vbos[q] = null;
+                }
+                this.m_vbos = null;
+            }
+            if (this.m_ibo) {
+                this.m_ibo.release();
+                this.m_ibo = null;
+            }
+        };
         /**
         *    Creates and adds a new VBO object with the given data
         *    @method addVbo

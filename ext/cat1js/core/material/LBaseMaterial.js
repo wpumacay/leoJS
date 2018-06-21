@@ -6,6 +6,9 @@ var core;
             this.color = color;
             this.m_type = 'base';
         }
+        LBaseMaterial.prototype.release = function () {
+            this.color = null;
+        };
         LBaseMaterial.prototype.bind = function () {
             // Override this
         };

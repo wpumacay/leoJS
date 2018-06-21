@@ -44,6 +44,19 @@ var leojs;
             this.m_worldTransform = new core.LMat4();
             this.m_geometry = null;
         }
+        RKinNode.prototype.release = function () {
+            this.m_parentJoint = null;
+            if (this.m_childrenJoints) {
+                for (var q = 0; q < this.m_childrenJoints.length; q++) {
+                    this.m_childrenJoints[q] = null;
+                }
+                this.m_childrenJoints = null;
+            }
+            this.m_localTransform = null;
+            this.m_linkTransform = null;
+            this.m_worldTransform = null;
+            this.m_geometry = null;
+        };
         RKinNode.prototype.initNode = function (lxyz, lrpy, geometryProperties) {
             core.LMat4.fromPosEulerInPlace(this.m_localTransform, lxyz, lrpy);
             this.m_geometry = RKinNodeGeometry.fromDict(geometryProperties);
@@ -98,6 +111,16 @@ var leojs;
             this.m_jointVariableTransform = new core.LMat4();
             this.m_jointTransform = new core.LMat4();
         }
+        RKinJoint.prototype.release = function () {
+            this.m_parent = null;
+            this.m_child = null;
+            this.m_xyz = null;
+            this.m_rpy = null;
+            this.m_axis = null;
+            this.m_jointBaseTransform = null;
+            this.m_jointVariableTransform = null;
+            this.m_jointTransform = null;
+        };
         RKinJoint.prototype.initJoint = function (jxyz, jrpy, axis, type, parentId, childId) {
             this.m_xyz = jxyz;
             this.m_rpy = jrpy;
@@ -147,6 +170,23 @@ var leojs;
             this.m_kinNodes = {};
             this.m_kinJoints = {};
         }
+        RKinTree.prototype.release = function () {
+            if (this.m_kinNodes) {
+                for (var key in this.m_kinNodes) {
+                    this.m_kinNodes[key].release();
+                    this.m_kinNodes[key] = null;
+                }
+                this.m_kinNodes = null;
+            }
+            if (this.m_kinJoints) {
+                for (var key in this.m_kinJoints) {
+                    this.m_kinJoints[key].release();
+                    this.m_kinJoints[key] = null;
+                }
+                this.m_kinJoints = null;
+            }
+            this.m_rootNode = null;
+        };
         RKinTree.prototype.setRootNode = function (node) {
             if (this.m_rootNode) {
                 console.warn('RKinTree> changing the root node ' +

@@ -25,6 +25,14 @@ var leojs;
             _this._initTreeModel();
             return _this;
         }
+        RManipulator.prototype.release = function () {
+            if (this.m_kinTree) {
+                this.m_kinTree.release();
+                this.m_kinTree = null;
+            }
+            this.m_treeModelRef = null;
+            _super.prototype.release.call(this);
+        };
         RManipulator.prototype._initKinTree = function (urdfStr) {
             // Build kintree from urdf
             var _parser = new leojs.RUrdfModelParser();

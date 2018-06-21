@@ -50,9 +50,19 @@ var leojs;
             }
         };
         RWorld.prototype.update = function (dt) {
-            for (var _i = 0, _a = this.m_entities; _i < _a.length; _i++) {
-                var _entity = _a[_i];
-                _entity.update(dt);
+            for (var q = 0; q < this.m_entities.length; q++) {
+                if (!this.m_entities[q]) {
+                    continue;
+                }
+                if (this.m_entities[q].deletionRequested) {
+                    // TODO: Clear the null references from the entities list
+                    this.m_entities[q].release();
+                    this.m_entities.splice(q, 1);
+                    q--;
+                }
+                else {
+                    this.m_entities[q].update(dt);
+                }
             }
         };
         return RWorld;

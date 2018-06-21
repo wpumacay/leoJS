@@ -6,8 +6,18 @@ var leojs;
         function REntity() {
             this.position = new core.LVec3(0, 0, 0);
             this.rotation = new core.LVec3(0, 0, 0);
+            this.deletionRequested = false;
             this.m_components = {};
         }
+        REntity.prototype.release = function () {
+            if (this.m_components) {
+                for (var key in this.m_components) {
+                    this.m_components[key].release();
+                    this.m_components[key] = null;
+                }
+                this.m_components = null;
+            }
+        };
         REntity.prototype.addComponent = function (component) {
             if (this.m_components[component.typeId()]) {
                 console.warn('REntity> this entity already ' +
@@ -24,11 +34,17 @@ var leojs;
             return this.m_components[componentType];
         };
         REntity.prototype.update = function (dt) {
+            if (!this.m_components) {
+                return;
+            }
             for (var _key in this.m_components) {
                 this.m_components[_key].update(dt);
             }
         };
         REntity.prototype.setVisibility = function (visible) {
+            if (!this.m_components) {
+                return;
+            }
             if (this.m_components[leojs.RComponentType.GRAPHICS]) {
                 var _graphics = this.m_components[leojs.RComponentType.GRAPHICS];
                 _graphics.setVisibility(visible);

@@ -59,7 +59,17 @@ var core;
             }
             var q;
             for (q = 0; q < this.m_renderables.length; q++) {
-                this.m_renderables[q].update();
+                if (!this.m_renderables[q]) {
+                    continue;
+                }
+                if (this.m_renderables[q].isDeletionRequested()) {
+                    this.m_renderables[q].release();
+                    this.m_renderables.splice(q, 1);
+                    q--;
+                }
+                else {
+                    this.m_renderables[q].update();
+                }
             }
         };
         LScene.prototype.onResize = function (appWidth, appHeight) {

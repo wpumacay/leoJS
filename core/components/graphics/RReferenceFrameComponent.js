@@ -48,6 +48,19 @@ var leojs;
             _this._updateGraphicsOrientation();
             return _this;
         }
+        RReferenceFrameComponent.prototype.release = function () {
+            this.m_posXYZ = null;
+            this.m_rotEuler = null;
+            this.m_rotMat = null;
+            this.m_frameMatrix = null;
+            this.m_axisX = null;
+            this.m_axisY = null;
+            this.m_axisZ = null;
+            this.m_rotArrowX = null;
+            this.m_rotArrowY = null;
+            this.m_rotArrowZ = null;
+            _super.prototype.release.call(this);
+        };
         RReferenceFrameComponent.prototype._initGraphics = function () {
             // Axes made by arrows, ...
             // and origin is just a small sphere

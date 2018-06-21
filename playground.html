@@ -1,0 +1,53 @@
+<html>
+    <head>
+
+        <title>cat1js</title>
+
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"/> -->
+
+        <link rel="stylesheet" type="text/css" href="extjs/datgui/build/dat.gui.css">
+        <link rel="stylesheet" type="text/css" href="playground.css" />
+
+        <style>
+            body 
+            {
+                margin: 0;
+                padding: 0;
+                background-color: #000000;
+            }
+        </style>    
+
+        <!-- Include libs -->
+        <script type = "text/javascript" src = "extjs/datgui/build/dat.gui.js"></script>
+        <script type = "text/javascript" src = "ext/cat1js/LCommon.js"></script>
+        <script type = "text/javascript" src = "ext/cat1js/LAssets.js"></script>
+        <script type = "text/javascript" src = "RAssets.js"></script>
+        <script type = "text/javascript" src = "RBoot.js"></script>
+        <script type = "text/javascript" src = "REntryPoint.js"></script>
+
+        <script type = "text/javascript" src = "playgroundNavbar.js"></script>
+        <script src="extjs/monaco-editor/min/vs/loader.js"> </script>
+        <script src="playgroundEntryPoint.js"> </script>
+
+    </head>
+    <body>
+
+        <canvas id="glCanvas"></canvas>
+        <div id="containerEditor">
+            <div id="navbar">
+                <button type="button" id="btnRun" onclick="onButtonRun()">Run Script</button>
+                <button type="button" id="btnClear" onclick="onButtonClean()">Clean Scene</button>
+                <select id="listDHsamples" onchange="onListDHchanged()">
+                    <option value="DH_KUKA_KR210">KUKA KR210</option>
+                    <option value="DH_SCARA">SCARA</option>
+                </select>
+            </div>
+            <div id="editorDiv" ></div>
+        </div>
+
+
+        <script type = "text/javascript">leojs.REntryPoint.begin();</script>
+        <script type = "text/javascript" src = "mainPlayground.js"></script>
+    </body>
+</html>

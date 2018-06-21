@@ -25,6 +25,13 @@ var leojs;
             _this._initializePrismaticJoint();
             return _this;
         }
+        RDHjointPrismaticComponent.prototype.release = function () {
+            this.m_jointFixedMeshRef = null;
+            this.m_jointMovingMeshRef = null;
+            this.m_jointTransformBase = null;
+            this.m_jointTransformTotal = null;
+            _super.prototype.release.call(this);
+        };
         RDHjointPrismaticComponent.prototype._initializePrismaticJoint = function () {
             this.m_jointFixedMeshRef = leojs.buildPrimitive({ 'shape': 'box',
                 'width': 0.1,

@@ -28,6 +28,9 @@ var leojs;
             this.m_name = uiName;
             this.m_controller = null;
         }
+        RUIelement.prototype.release = function () {
+            this.m_controller = null;
+        };
         RUIelement.prototype.assignController = function (controller) { this.m_controller = controller; };
         RUIelement.prototype.controller = function () { return this.m_controller; };
         RUIelement.prototype.name = function () { return this.m_name; };
@@ -43,6 +46,10 @@ var leojs;
             _this.m_callback = fcnCallback;
             return _this;
         }
+        RUIbutton.prototype.release = function () {
+            this.m_callback = null;
+            _super.prototype.release.call(this);
+        };
         RUIbutton.prototype.callback = function () { return this.m_callback; };
         return RUIbutton;
     }(RUIelement));
@@ -70,6 +77,10 @@ var leojs;
             _this.m_onChangeCallback = onChangeCallback;
             return _this;
         }
+        RUIslider.prototype.release = function () {
+            this.m_onChangeCallback = null;
+            _super.prototype.release.call(this);
+        };
         RUIslider.prototype.min = function () { return this.m_min; };
         RUIslider.prototype.max = function () { return this.m_max; };
         RUIslider.prototype.initValue = function () { return this.m_current; };
@@ -97,6 +108,14 @@ var leojs;
             _this.m_children = [];
             return _this;
         }
+        RUIfolder.prototype.release = function () {
+            if (this.m_children) {
+                for (var q = 0; q < this.m_children.length; q++) {
+                    this.m_children[q] = null;
+                }
+                this.m_children = null;
+            }
+        };
         RUIfolder.prototype.addChild = function (child) {
             this.m_children.push(child);
         };
@@ -111,6 +130,23 @@ var leojs;
             this.m_uiElements = [];
             this.m_uiStorage = {};
         }
+        RUIwrapper.prototype.release = function () {
+            this.m_dgui = null;
+            this.m_uiDef = null;
+            if (this.m_uiElements) {
+                for (var q = 0; q < this.m_uiElements.length; q++) {
+                    this.m_uiElements[q].release();
+                    this.m_uiElements[q] = null;
+                }
+                this.m_uiElements = null;
+            }
+            if (this.m_uiStorage) {
+                for (var key in this.m_uiStorage) {
+                    this.m_uiStorage[key] = null;
+                }
+                this.m_uiStorage = null;
+            }
+        };
         RUIwrapper.prototype.appendUIelement = function (uiElement) {
             this.m_uiElements.push(uiElement);
         };
@@ -191,9 +227,31 @@ var leojs;
             this.m_dhTable = dhModel.getDHtable();
             this.m_isDHmodelVisible = true;
             this.m_isURDFmodelVisible = true;
+            this.m_ikEnabled = false;
+            this._initializeMode();
             this._initializeUI();
             this._initializeControllers();
         }
+        RDHguiController.prototype.release = function () {
+            if (this.m_uiWrapper) {
+                this.m_uiWrapper.release();
+                this.m_uiWrapper = null;
+            }
+            if (this.m_dgui) {
+                this.m_dgui.destroy();
+                this.m_dgui = null;
+            }
+            this.m_dhModel = null;
+            this.m_dhTable = null;
+        };
+        RDHguiController.prototype._initializeMode = function () {
+            if (this.m_dhModel.getWorld().getWorldId() == 'DEMO') {
+                this.m_ikEnabled = true;
+            }
+            else if (this.m_dhModel.getWorld().getWorldId() == 'PLAYGROUND') {
+                this.m_ikEnabled = false;
+            }
+        };
         RDHguiController.prototype._initializeUI = function () {
             var _self = this;
             var _entries = this.m_dhTable.entries();
@@ -212,22 +270,24 @@ var leojs;
             this.m_uiWrapper.appendUIelement(_fForwardKinematics);
             // ******************************************************************
             // Inverse kinematics ***********************************************
-            var _fInverseKinematics = new RUIfolder('Inverse Kinematics');
-            for (var q = 0; q < _entries.length; q++) {
-                _fInverseKinematics.addChild(new RUItext('ik_q' + (q + 1), '0'));
+            if (this.m_ikEnabled) {
+                var _fInverseKinematics = new RUIfolder('Inverse Kinematics');
+                for (var q = 0; q < _entries.length; q++) {
+                    _fInverseKinematics.addChild(new RUItext('ik_q' + (q + 1), '0'));
+                }
+                _fInverseKinematics.addChild(new RUIslider('ik_x', this.m_dhModel.xyzMinEstimate().x, this.m_dhModel.xyzMaxEstimate().x, this.m_dhModel.xyzZeroPosition().x, function () { _self.doInverseKinematics(); }));
+                _fInverseKinematics.addChild(new RUIslider('ik_y', this.m_dhModel.xyzMinEstimate().y, this.m_dhModel.xyzMaxEstimate().y, this.m_dhModel.xyzZeroPosition().y, function () { _self.doInverseKinematics(); }));
+                _fInverseKinematics.addChild(new RUIslider('ik_z', this.m_dhModel.xyzMinEstimate().z, this.m_dhModel.xyzMaxEstimate().z, this.m_dhModel.xyzZeroPosition().z, function () { _self.doInverseKinematics(); }));
+                if (this.m_dhModel.includeInvKinEndEffectorOrientation()) {
+                    // Allow the GUI to control the end effector orientation
+                    _fInverseKinematics.addChild(new RUIslider('ik_roll', -Math.PI, Math.PI, this.m_dhModel.rpyZeroPosition().x, function () { _self.doInverseKinematics(); }));
+                    _fInverseKinematics.addChild(new RUIslider('ik_pitch', -Math.PI, Math.PI, this.m_dhModel.rpyZeroPosition().y, function () { _self.doInverseKinematics(); }));
+                    _fInverseKinematics.addChild(new RUIslider('ik_yaw', -Math.PI, Math.PI, this.m_dhModel.rpyZeroPosition().z, function () { _self.doInverseKinematics(); }));
+                }
+                // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
+                this.m_uiWrapper.appendUIelement(_fInverseKinematics);
+                // ******************************************************************
             }
-            _fInverseKinematics.addChild(new RUIslider('ik_x', this.m_dhModel.xyzMinEstimate().x, this.m_dhModel.xyzMaxEstimate().x, this.m_dhModel.xyzZeroPosition().x, function () { _self.doInverseKinematics(); }));
-            _fInverseKinematics.addChild(new RUIslider('ik_y', this.m_dhModel.xyzMinEstimate().y, this.m_dhModel.xyzMaxEstimate().y, this.m_dhModel.xyzZeroPosition().y, function () { _self.doInverseKinematics(); }));
-            _fInverseKinematics.addChild(new RUIslider('ik_z', this.m_dhModel.xyzMinEstimate().z, this.m_dhModel.xyzMaxEstimate().z, this.m_dhModel.xyzZeroPosition().z, function () { _self.doInverseKinematics(); }));
-            if (this.m_dhModel.includeInvKinEndEffectorOrientation()) {
-                // Allow the GUI to control the end effector orientation
-                _fInverseKinematics.addChild(new RUIslider('ik_roll', -Math.PI, Math.PI, this.m_dhModel.rpyZeroPosition().x, function () { _self.doInverseKinematics(); }));
-                _fInverseKinematics.addChild(new RUIslider('ik_pitch', -Math.PI, Math.PI, this.m_dhModel.rpyZeroPosition().y, function () { _self.doInverseKinematics(); }));
-                _fInverseKinematics.addChild(new RUIslider('ik_yaw', -Math.PI, Math.PI, this.m_dhModel.rpyZeroPosition().z, function () { _self.doInverseKinematics(); }));
-            }
-            // _fInverseKinematics.addChild( new RUIbutton( 'compute IK', () => { _self.doInverseKinematics(); } ) );
-            this.m_uiWrapper.appendUIelement(_fInverseKinematics);
-            // ******************************************************************
             // Visibility ******************************************************
             var _fVisibility = new RUIfolder('Visibility');
             _fVisibility.addChild(new RUIcheckbox('DH_model', true));
@@ -293,12 +353,14 @@ var leojs;
             _yawText.controller().setValue('' + _rpy.z);
         };
         RDHguiController.prototype._updateIKvalues = function () {
-            var _joints = this.m_dhTable.getAllJointValues();
-            // Update joints text UI elements
-            var _entries = this.m_dhTable.entries();
-            for (var q = 0; q < _entries.length; q++) {
-                var _qText = this.m_uiWrapper.getElementByName('ik_q' + (q + 1));
-                _qText.controller().setValue('' + _joints[q]);
+            if (this.m_ikEnabled) {
+                var _joints = this.m_dhTable.getAllJointValues();
+                // Update joints text UI elements
+                var _entries = this.m_dhTable.entries();
+                for (var q = 0; q < _entries.length; q++) {
+                    var _qText = this.m_uiWrapper.getElementByName('ik_q' + (q + 1));
+                    _qText.controller().setValue('' + _joints[q]);
+                }
             }
         };
         RDHguiController.prototype._updateVisibilityValues = function () {

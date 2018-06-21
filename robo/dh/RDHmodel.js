@@ -20,15 +20,55 @@ var leojs;
             this.m_xyzMaxEstimate = new core.LVec3(0, 0, 0);
             this.m_xyzZeroPosition = new core.LVec3(0, 0, 0);
             this.m_rpyZeroPosition = new core.LVec3(0, 0, 0);
+            this.m_showEndEffector = true;
             this.m_visibility = true;
             this.m_endEffectorTotalTransform = new core.LMat4();
             this.m_endEffectorCompensation = new core.LMat4();
+        }
+        RDHmodel.prototype.init = function () {
             this._buildDHrepresentation();
             this._buildModel();
             this._computeEndEffectorOffset();
             this._computeMinMaxEstimates();
             this._computeXYZzeroPosition();
-        }
+        };
+        RDHmodel.prototype.release = function () {
+            if (this.m_dhTable) {
+                this.m_dhTable.release();
+                this.m_dhTable = null;
+            }
+            // The World is in charge of removing the entities
+            // Just remove the references here
+            if (this.m_frames) {
+                for (var q = 0; q < this.m_frames.length; q++) {
+                    this.m_frames[q].deletionRequested = true;
+                    this.m_frames[q] = null;
+                }
+                this.m_frames = null;
+            }
+            if (this.m_joints) {
+                for (var q = 0; q < this.m_joints.length; q++) {
+                    this.m_joints[q].deletionRequested = true;
+                    this.m_joints[q] = null;
+                }
+                this.m_joints = null;
+            }
+            if (this.m_endEffector) {
+                this.m_endEffector.deletionRequested = true;
+                this.m_endEffector = null;
+            }
+            if (this.m_base) {
+                this.m_base.deletionRequested = true;
+                this.m_base = null;
+            }
+            this.m_endEffectorCompensation = null;
+            this.m_endEffectorTotalTransform = null;
+            this.m_world = null;
+            this.m_xyzMinEstimate = null;
+            this.m_xyzMaxEstimate = null;
+            this.m_xyzZeroPosition = null;
+            this.m_rpyZeroPosition = null;
+        };
         RDHmodel.prototype.xyzMinEstimate = function () { return this.m_xyzMinEstimate; };
         RDHmodel.prototype.xyzMaxEstimate = function () { return this.m_xyzMaxEstimate; };
         RDHmodel.prototype.xyzZeroPosition = function () { return this.m_xyzZeroPosition; };
@@ -109,6 +149,7 @@ var leojs;
                     _priJointComp.setJointValue(this.m_dhTable.getJointValue(q));
                 }
             }
+            this.m_endEffector.setVisibility(this.m_showEndEffector);
             // Update end effector
             core.mulMatMat44InPlace(this.m_endEffectorTotalTransform, this.m_dhTable.getFullTransform(), this.m_endEffectorCompensation);
             core.LMat4.extractPositionInPlace(this.m_endEffector.position, this.m_endEffectorTotalTransform);
@@ -127,17 +168,41 @@ var leojs;
             this.m_dhTable.update(0);
             return this.m_dhTable.getEndEffectorXYZ().clone();
         };
+        /**
+        *    Robot specific method to check if roll-pitch-yaw is actually ...
+        *    used by the robot-specific IK solver. Used only by the UI to ...
+        *    create or not the RollPitchYaw controls
+        *
+        *    @method isInWorkspace
+        *    @param {core.LVec3} xyz position to be evaluated
+        */
+        RDHmodel.prototype.includeInvKinEndEffectorOrientation = function () {
+            // Override this
+            return true;
+        };
+        /**
+        *    Robot specific method to check if in workspace
+        *
+        *    @method isInWorkspace
+        *    @param {core.LVec3} xyz position to be evaluated
+        */
+        RDHmodel.prototype.isInWorkspace = function (xyz) {
+            // Override this
+            return false;
+        };
         RDHmodel.prototype.update = function (dt) {
             this.m_time += dt * 0.001;
-            // this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 0 ) + dt * 0.00025, 0 );
-            // this.m_dhTable.setJointValue( this.m_dhTable.getJointValue( 1 ) + dt * 0.00025, 1 );
-            // this.m_dhTable.setJointValue( 2.5 * ( Math.sin( this.m_time * 0.5 ) + 1 ) , 2 );
             // Update internal states of the robot representation
             this.m_dhTable.update(dt);
             // Update model of the robot using the before updated representation
             this._updateModel();
         };
-        RDHmodel.prototype.getDHtable = function () { return this.m_dhTable; };
+        RDHmodel.prototype.getDHtable = function () {
+            return this.m_dhTable;
+        };
+        RDHmodel.prototype.getWorld = function () {
+            return this.m_world;
+        };
         RDHmodel.prototype.getJointValueById = function (jointId) {
             return this.m_dhTable.getJointValueById(jointId);
         };
@@ -165,7 +230,9 @@ var leojs;
                 _joint.setVisibility(visible);
             }
             if (this.m_endEffector) {
-                this.m_endEffector.setVisibility(visible);
+                if (this.m_showEndEffector) {
+                    this.m_endEffector.setVisibility(visible);
+                }
             }
             if (this.m_base) {
                 this.m_base.setVisibility(visible);

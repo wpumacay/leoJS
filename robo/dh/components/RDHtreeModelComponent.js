@@ -23,6 +23,16 @@ var leojs;
             _this._init();
             return _this;
         }
+        RDHtreeModelComponent.prototype.release = function () {
+            if (this.m_meshes) {
+                for (var key in this.m_meshes) {
+                    this.m_meshes[key] = null;
+                }
+                this.m_meshes = null;
+            }
+            this.m_kinTreeRef = null;
+            _super.prototype.release.call(this);
+        };
         RDHtreeModelComponent.prototype._init = function () {
             this._initializeLinks();
         };

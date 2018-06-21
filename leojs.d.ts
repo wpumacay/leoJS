@@ -316,6 +316,7 @@ declare namespace core {
         color: LVec3;
         protected m_type: string;
         constructor(color: LVec3);
+        release(): void;
         bind(): void;
         unbind(): void;
         type(): string;
@@ -336,6 +337,7 @@ declare namespace engine3d {
         specular: core.LVec3;
         shininess: number;
         constructor(ambient: core.LVec3, diffuse: core.LVec3, specular: core.LVec3, shininess: number);
+        release(): void;
         static staticType(): string;
     }
 }
@@ -498,7 +500,7 @@ declare namespace core {
         constructor();
         getShader(shaderId: string): LShader;
         loadBatch(shadersInfo: LShaderAssetInfo[], callback: Function): void;
-        private _loadShader(shaderInfo);
+        private _loadShader;
         update(): void;
         generateShader(shaderData: LShaderData): LShader;
         compileShader(type: number, code: string): WebGLShader;
@@ -518,7 +520,7 @@ declare namespace core {
         private m_isWorking;
         constructor();
         loadBatch(imgsInfo: LTextureAssetInfo[], callback: Function): void;
-        private _loadImage(assetInfo);
+        private _loadImage;
         getTexture(textureId: string): LTexture;
         update(): void;
     }
@@ -590,7 +592,7 @@ declare namespace core {
     enum UpAxis {
         X = "X_UP",
         Y = "Y_UP",
-        Z = "Z_UP",
+        Z = "Z_UP"
     }
     class LColladaModelProperties {
         scale: number;
@@ -605,28 +607,28 @@ declare namespace core {
     class LColladaParser {
         constructor();
         parseModel(rootModelElement: HTMLElement): LModelConstructInfo;
-        private _parseModelAssetProperties(rootModelElement);
-        private _parseGeometries(geometriesElm);
-        private _parseSingleGeometry(geoElm);
-        private _parseBuffers(targetGeo, meshElm);
-        private _parseBuffersUsageAndLayout(targetGeo, meshElm);
-        private _parseBuffersLayout(targetGeo, meshElm);
-        private _parseBuffersUsage(targetGeo, meshElm);
-        private _parseFaces(targetGeo, meshElm);
-        private _parseFacesTriangles(targetGeo, meshElm);
-        private _parseFacesTrianglesByLayout(targetGeo, triBatchData, triCount);
-        private _buildFaceTriIndex(targetGeo, vertexIndex, indexInLayout, vertexAttribId);
-        private _parseFacesPolylist(targetGeo, meshElm);
-        private _parseFacesPolylistByLayout(targetGeo, polys, polyIndexData);
-        private _getBufferByUsage(buffers, usage);
-        private _buildConstructionInfo(parsedGeometries, parsedMaterials, parsedModelProperties);
-        private _getPositionBuffer(colladaGeo);
-        private _getNormalBuffer(colladaGeo, positionBuffer);
-        private _getTexCoordBuffer(colladaGeo, positionBuffer);
-        private _appendBufferIntoVec3Array(buffer, vec3Array, scale);
-        private _appendBufferIntoVec2Array(buffer, vec2Array);
-        private _compensateIndices(indexBuffer, offset);
-        private _appendBufferIntoInd3Array(indexBuffer, ind3Array);
+        private _parseModelAssetProperties;
+        private _parseGeometries;
+        private _parseSingleGeometry;
+        private _parseBuffers;
+        private _parseBuffersUsageAndLayout;
+        private _parseBuffersLayout;
+        private _parseBuffersUsage;
+        private _parseFaces;
+        private _parseFacesTriangles;
+        private _parseFacesTrianglesByLayout;
+        private _buildFaceTriIndex;
+        private _parseFacesPolylist;
+        private _parseFacesPolylistByLayout;
+        private _getBufferByUsage;
+        private _buildConstructionInfo;
+        private _getPositionBuffer;
+        private _getNormalBuffer;
+        private _getTexCoordBuffer;
+        private _appendBufferIntoVec3Array;
+        private _appendBufferIntoVec2Array;
+        private _compensateIndices;
+        private _appendBufferIntoInd3Array;
     }
 }
 /// <reference path="LColladaParser.d.ts" />
@@ -640,10 +642,10 @@ declare namespace core {
         constructor();
         getModel(modelId: string): LModelConstructInfo;
         loadBatch(modelsInfo: LModelInfo[], callback: Function): void;
-        private _loadModel(modelInfo);
+        private _loadModel;
         parseModelFile(strModel: string, modelType: string): LModelConstructInfo;
-        private _parseColladaModel(strModel);
-        private _parseObjModel(strModel);
+        private _parseColladaModel;
+        private _parseObjModel;
         update(): void;
     }
 }
@@ -657,7 +659,7 @@ declare namespace core {
         constructor();
         getTextAsset(textId: string): string;
         loadBatch(textAssetsInfo: LTextAssetInfo[], callback: Function): void;
-        private _loadTextAsset(textAssetInfo);
+        private _loadTextAsset;
         update(): void;
     }
 }
@@ -695,6 +697,7 @@ declare namespace core {
         protected m_ibo: LIndexBuffer;
         protected m_vbos: LVertexBuffer[];
         constructor();
+        release(): void;
         /**
         *    Creates and adds a new VBO object with the given data
         *    @method addVbo
@@ -726,12 +729,16 @@ declare namespace core {
     class LIRenderable {
         protected m_type: string;
         protected m_isVisible: boolean;
+        protected m_deletionRequested: boolean;
         constructor();
+        release(): void;
         update(): void;
         render(): void;
         type(): string;
         isVisible(): boolean;
         setVisibility(visibility: boolean): void;
+        requestDeletion(): void;
+        isDeletionRequested(): boolean;
     }
 }
 /// <reference path="../math/LMath.d.ts" />
@@ -756,7 +763,7 @@ declare namespace core {
 declare namespace core {
     enum ProjectionMode {
         PERSPECTIVE = 0,
-        ORTHOGRAPHIC = 1,
+        ORTHOGRAPHIC = 1
     }
     class LBaseCamera {
         protected m_pos: LVec3;
@@ -858,6 +865,7 @@ declare namespace engine3d {
         protected m_modelMatrix: core.LMat4;
         protected m_isWireframe: boolean;
         constructor(geometry: LGeometry3d, material: LMaterial3d, modelCompensation?: core.LMat4);
+        release(): void;
         setRotEuler(euler: core.LVec3): void;
         setRotEulerX(eulerX: number): void;
         setRotEulerY(eulerY: number): void;
@@ -937,8 +945,8 @@ declare namespace core {
         private m_mouseUpCallback;
         private m_mouseMoveCallback;
         constructor(canvas: HTMLCanvasElement);
-        private _registerEvents();
-        private _isKeyPressed(keyId);
+        private _registerEvents;
+        private _isKeyPressed;
         static init(canvas: HTMLCanvasElement): void;
         static wheelAcumValue(): number;
         static cursorXY(): LVec2;
@@ -963,7 +971,7 @@ declare namespace engine3d {
     enum OrbitCameraState {
         IDLE = 0,
         DRAGGING = 1,
-        MOVING_TARGET = 2,
+        MOVING_TARGET = 2
     }
     class LOrbitCamera extends core.LBaseCamera {
         private m_rho;
@@ -979,8 +987,8 @@ declare namespace engine3d {
         private m_mouseCurrentXY;
         private m_mouseStartXY;
         constructor(pos: core.LVec3, targetPoint: core.LVec3, worldUp: core.LVec3, width: number, height: number, zNear: number, zFar: number, fov: number, projMode: core.ProjectionMode, id: string);
-        private _computeSphericalsFromPosition();
-        private _computePositionFromSphericals();
+        private _computeSphericalsFromPosition;
+        private _computePositionFromSphericals;
         setTargetPoint(targetPoint: core.LVec3): void;
         getTargetPoint(): core.LVec3;
         rho(): number;
@@ -1014,8 +1022,8 @@ declare namespace engine3d {
         drawFrame(frameMat: core.LMat4, axisSize: number): void;
         setupMatrices(viewMatrix: core.LMat4, projMatrix: core.LMat4): void;
         render(): void;
-        private _renderLines();
-        private _renderLinesBatch(countLines);
+        private _renderLines;
+        private _renderLinesBatch;
     }
 }
 /// <reference path="../../core/math/LMath.d.ts" />
@@ -1053,8 +1061,8 @@ declare namespace engine3d {
         isLightingEnabled(): boolean;
         begin(meshes: LMesh[]): void;
         render(scene: core.LScene): void;
-        private _renderWithLighting(scene);
-        private _renderNoLighting(scene);
+        private _renderWithLighting;
+        private _renderNoLighting;
         end(): void;
     }
 }
@@ -1141,10 +1149,12 @@ declare namespace leojs {
     class REntity {
         position: core.LVec3;
         rotation: core.LVec3;
+        deletionRequested: boolean;
         protected m_components: {
             [id: number]: RComponent;
         };
         constructor();
+        release(): void;
         addComponent(component: RComponent): void;
         getComponent(componentType: number): RComponent;
         update(dt: number): void;
@@ -1160,7 +1170,7 @@ declare namespace leojs {
     enum RComponentType {
         NEUTRAL = 0,
         GRAPHICS = 1,
-        PHYSICS = 2,
+        PHYSICS = 2
     }
     class RComponent {
         static CLASS_ID: string;
@@ -1168,6 +1178,7 @@ declare namespace leojs {
         protected m_classId: string;
         protected m_typeId: RComponentType;
         constructor(parent: REntity);
+        release(): void;
         typeId(): RComponentType;
         classId(): string;
         update(dt: number): void;
@@ -1180,6 +1191,7 @@ declare namespace leojs {
         static CLASS_ID: string;
         protected m_renderables: core.LIRenderable[];
         constructor(parent: REntity);
+        release(): void;
         renderables(): core.LIRenderable[];
         update(dt: number): void;
         setVisibility(visible: boolean): void;
@@ -1237,10 +1249,11 @@ declare namespace leojs {
         * @param {core.LVec3} euler frame's Tait-Bryan zyx angles
         */
         constructor(parent: REntity, pos?: core.LVec3, euler?: core.LVec3);
-        private _initGraphics();
-        private _updateGraphicsPosition();
-        private _updateGraphicsOrientation();
-        private _updateAxes();
+        release(): void;
+        private _initGraphics;
+        private _updateGraphicsPosition;
+        private _updateGraphicsOrientation;
+        private _updateAxes;
         setPosition(pos: core.LVec3): void;
         setOrientation(euler: core.LVec3): void;
         setFrameMatrix(mat: core.LMat4): void;
@@ -1291,14 +1304,14 @@ declare namespace leojs {
     enum JointType {
         NONE = 0,
         REVOLUTE = 1,
-        PRISMATIC = 2,
+        PRISMATIC = 2
     }
     const DHjointTypes: JointType[];
     enum DHparams {
         alpha_i_1 = 0,
         a_i_1 = 1,
         d_i = 2,
-        theta_i = 3,
+        theta_i = 3
     }
     class RDHentry {
         private m_jointId;
@@ -1312,6 +1325,7 @@ declare namespace leojs {
         private m_maxJointValue;
         private m_rangeJointValue;
         constructor(jointId: string, pFixed: boolean[], pValues: number[], pMinJointValue: number, pMaxJointValue: number, jointSign?: number, jointOffset?: number);
+        release(): void;
         jointId(): string;
         fixed(): boolean[];
         values(): number[];
@@ -1320,9 +1334,9 @@ declare namespace leojs {
         rangeJointValue(): number;
         setParamValue(value: number, indx: DHparams): void;
         getParamValue(indx: DHparams): number;
-        private _updateTransform();
+        private _updateTransform;
         getTransform(): core.LMat4;
-        private _getJointType();
+        private _getJointType;
         getJointType(): JointType;
     }
     class RDHtable {
@@ -1332,6 +1346,7 @@ declare namespace leojs {
         private m_xyz;
         private m_rpy;
         constructor();
+        release(): void;
         appendEntry(entry: RDHentry): void;
         numJoints(): number;
         setJointValue(value: number, indx: number): void;
@@ -1344,7 +1359,7 @@ declare namespace leojs {
         getRangeJointValue(indx: number): number;
         getTransform(indx: number): core.LMat4;
         getTransformInRange(from: number, to: number): core.LMat4;
-        private _getTotalTransform();
+        private _getTotalTransform;
         entries(): RDHentry[];
         getFullTransform(): core.LMat4;
         getEndEffectorXYZ(): core.LVec3;
@@ -1372,7 +1387,8 @@ declare namespace leojs {
         private m_leftGripTotalTransformToRoot;
         private m_rightGripTotalTransformToRoot;
         constructor(parent: REntity);
-        private _initializeEndEffector();
+        release(): void;
+        private _initializeEndEffector;
         update(dt: number): void;
     }
 }
@@ -1387,7 +1403,8 @@ declare namespace leojs {
         private m_jointTransformTotal;
         private m_jointValue;
         constructor(parent: REntity);
-        private _initializePrismaticJoint();
+        release(): void;
+        private _initializePrismaticJoint;
         setJointValue(jointValue: number): void;
         update(dt: number): void;
     }
@@ -1402,7 +1419,8 @@ declare namespace leojs {
         private m_jointRotMatTotal;
         private m_jointValue;
         constructor(parent: REntity);
-        private _initializeRevoluteJoint();
+        release(): void;
+        private _initializeRevoluteJoint;
         setJointValue(jointValue: number): void;
         update(dt: number): void;
     }
@@ -1439,6 +1457,7 @@ declare namespace leojs {
         private m_localTransform;
         private m_geometry;
         constructor(nodeId: string);
+        release(): void;
         initNode(lxyz: core.LVec3, lrpy: core.LVec3, geometryProperties: {
             [id: string]: any;
         }): void;
@@ -1468,6 +1487,7 @@ declare namespace leojs {
         private m_jointVariableTransform;
         private m_jointTransform;
         constructor(jointId: string);
+        release(): void;
         initJoint(jxyz: core.LVec3, jrpy: core.LVec3, axis: core.LVec3, type: string, parentId: string, childId: string): void;
         getParentId(): string;
         getChildId(): string;
@@ -1489,6 +1509,7 @@ declare namespace leojs {
         private m_kinJoints;
         private m_rootNode;
         constructor();
+        release(): void;
         setRootNode(node: RKinNode): void;
         addKinNode(node: RKinNode): void;
         addKinJoint(joint: RKinJoint): void;
@@ -1510,44 +1531,10 @@ declare namespace leojs {
         private m_meshes;
         private m_kinTreeRef;
         constructor(parent: REntity, kinTree: RKinTree);
-        private _init();
-        private _initializeLinks();
-        private _createLinkFromGeometry(geometry);
-        update(dt: number): void;
-    }
-}
-/// <reference path="../RDHmodel.d.ts" />
-declare namespace leojs {
-    class RDHmodelScara extends RDHmodel {
-        constructor(world: RDHWorld);
-        protected _buildDHrepresentation(): void;
-        includeInvKinEndEffectorOrientation(): boolean;
-        protected _computeEndEffectorOffset(): void;
-        protected _computeMinMaxEstimates(): void;
-        inverse(xyz: core.LVec3, rpy: core.LVec3): number[];
-        isInWorkspace(xyz: core.LVec3): boolean;
-    }
-}
-/// <reference path="../RDHmodel.d.ts" />
-declare namespace leojs {
-    class RDHmodelKukaKR210 extends RDHmodel {
-        private m_eeOffset;
-        private m_ikEEPosRef;
-        private m_ikWCPosRef;
-        private m_ikEErotMat;
-        private m_ikWCrotMat;
-        private m_ikEEtoWCrot;
-        private m_ikEEtoWCinvrot;
-        private m_R_0_3;
-        private m_R_0_3_inv;
-        private m_R_3_6;
-        constructor(world: RDHWorld);
-        protected _buildDHrepresentation(): void;
-        includeInvKinEndEffectorOrientation(): boolean;
-        protected _computeEndEffectorOffset(): void;
-        protected _computeMinMaxEstimates(): void;
-        inverse(xyz: core.LVec3, rpy: core.LVec3): number[];
-        isInWorkspace(xyz: core.LVec3): boolean;
+        release(): void;
+        private _init;
+        private _initializeLinks;
+        private _createLinkFromGeometry;
         update(dt: number): void;
     }
 }
@@ -1683,13 +1670,14 @@ declare namespace leojs {
         BUTTON = 2,
         TEXT = 3,
         SLIDER = 4,
-        CHECKBOX = 5,
+        CHECKBOX = 5
     }
     class RUIelement {
         protected m_type: UItype;
         protected m_name: string;
         protected m_controller: dat.GUIController;
         constructor(uiName: string);
+        release(): void;
         assignController(controller: dat.GUIController): void;
         controller(): dat.GUIController;
         name(): string;
@@ -1698,6 +1686,7 @@ declare namespace leojs {
     class RUIbutton extends RUIelement {
         private m_callback;
         constructor(uiName: string, fcnCallback: Function);
+        release(): void;
         callback(): Function;
     }
     class RUItext extends RUIelement {
@@ -1711,6 +1700,7 @@ declare namespace leojs {
         private m_current;
         private m_onChangeCallback;
         constructor(uiName: string, vMin: number, vMax: number, vCurrent: number, onChangeCallback: Function);
+        release(): void;
         min(): number;
         max(): number;
         initValue(): number;
@@ -1724,6 +1714,7 @@ declare namespace leojs {
     class RUIfolder extends RUIelement {
         private m_children;
         constructor(uiName: string);
+        release(): void;
         addChild(child: RUIelement): void;
         children(): RUIelement[];
     }
@@ -1733,15 +1724,16 @@ declare namespace leojs {
         private m_uiElements;
         private m_uiStorage;
         constructor(dgui: dat.GUI);
+        release(): void;
         appendUIelement(uiElement: RUIelement): void;
         elements(): RUIelement[];
         buildUI(): void;
-        private _buildNode(element, dguiParent);
-        private _buildFolder(folderElement, dguiParent);
-        private _buildButton(btnElement, dguiParent);
-        private _buildText(txtElement, dguiParent);
-        private _buildSlider(sldElement, dguiParent);
-        private _buildCheckbox(chbxElement, dguiParent);
+        private _buildNode;
+        private _buildFolder;
+        private _buildButton;
+        private _buildText;
+        private _buildSlider;
+        private _buildCheckbox;
         getElementByName(name: string): RUIelement;
     }
     class RDHguiController {
@@ -1751,17 +1743,20 @@ declare namespace leojs {
         private m_dhModel;
         private m_isDHmodelVisible;
         private m_isURDFmodelVisible;
+        private m_ikEnabled;
         constructor(dhModel: RDHmodel);
-        private _initializeUI();
-        private _initializeControllers();
+        release(): void;
+        _initializeMode(): void;
+        private _initializeUI;
+        private _initializeControllers;
         isDHmodelVisible(): boolean;
         isURDFmodelVisible(): boolean;
         doForwardKinematics(): void;
         doInverseKinematics(): void;
         update(dt: number): void;
-        private _updateFKvalues();
-        private _updateIKvalues();
-        private _updateVisibilityValues();
+        private _updateFKvalues;
+        private _updateIKvalues;
+        private _updateVisibilityValues;
     }
 }
 /// <reference path="RKinTree.d.ts" />
@@ -1772,7 +1767,7 @@ declare namespace leojs {
         BOX = "box",
         CYLINDER = "cylinder",
         SPHERE = "sphere",
-        MESH = "mesh",
+        MESH = "mesh"
     }
     class RUrdfLinkGeometry {
         type: RUrdfGeometryType;
@@ -1813,26 +1808,26 @@ declare namespace leojs {
         private m_xmlParser;
         constructor();
         parse(modelUrdfStr: string): RKinTree;
-        private _parseLinks(rootElement);
-        private _parseSingleLink(linkElm);
-        private _parseVisualOrigin(link, originElm);
-        private _parseVisualGeometry(link, geoElm);
-        private _parseJoints(rootElement);
-        private _parseSingleJoint(jointElm);
-        private _parseJointOrigin(joint, jointElm);
-        private _parseJointConnection(joint, jointElm);
-        private _parseJointAxis(joint, jointElm);
-        private _parseJointType(joint, jointElm);
-        private _makeKinTree(links, joints);
-        private _getRootLink(links, joints);
-        private _makeKinNodes(links);
-        private _makeKinJoints(joints);
-        private _assembleKinTree(kinTree, kinNodes, kinJoints);
-        private _getStringAttrib(elm, attribName, defValue);
-        private _getNumberAttrib(elm, attribName, defValue);
-        private _getArrayAttrib(elm, attribName, defValue);
-        private _getVec3Attrib(elm, attribName, defValue);
-        private _getImmediateChildrenByTagName(elm, name);
+        private _parseLinks;
+        private _parseSingleLink;
+        private _parseVisualOrigin;
+        private _parseVisualGeometry;
+        private _parseJoints;
+        private _parseSingleJoint;
+        private _parseJointOrigin;
+        private _parseJointConnection;
+        private _parseJointAxis;
+        private _parseJointType;
+        private _makeKinTree;
+        private _getRootLink;
+        private _makeKinNodes;
+        private _makeKinJoints;
+        private _assembleKinTree;
+        private _getStringAttrib;
+        private _getNumberAttrib;
+        private _getArrayAttrib;
+        private _getVec3Attrib;
+        private _getImmediateChildrenByTagName;
     }
 }
 /// <reference path="../../core/entities/REntity.d.ts" />
@@ -1845,8 +1840,9 @@ declare namespace leojs {
         private m_kinTree;
         private m_treeModelRef;
         constructor(urdfStr: string);
-        private _initKinTree(urdfStr);
-        private _initTreeModel();
+        release(): void;
+        private _initKinTree;
+        private _initTreeModel;
         update(dt: number): void;
         getJoints(): {
             [id: string]: RKinJoint;
@@ -1858,26 +1854,18 @@ declare namespace leojs {
 }
 /// <reference path="../../core/worlds/RWorld.d.ts" />
 /// <reference path="RDHmodel.d.ts" />
-/// <reference path="models/RDHmodelScara.d.ts" />
-/// <reference path="models/RDHmodelKukaKR210.d.ts" />
 /// <reference path="ui/RDHguiController.d.ts" />
 /// <reference path="RManipulator.d.ts" />
 declare namespace leojs {
-    enum RobotId {
-        SCARA = 0,
-        KUKA_KR210 = 1,
-    }
     class RDHWorld extends RWorld {
-        private m_dhModel;
-        private m_dhTable;
-        private m_dhGuiController;
-        private m_robotId;
-        private m_manipulatorRef;
-        constructor(appWidth: number, appHeight: number, robotId: RobotId);
-        private _initializeModel();
-        private _initializeUI();
-        private _initializeEnvironment();
-        private _drawFloorGrid();
+        protected m_dhModel: RDHmodel;
+        protected m_urdfModel: RManipulator;
+        protected m_uiController: RDHguiController;
+        protected m_worldId: string;
+        constructor(appWidth: number, appHeight: number);
+        init(): void;
+        getWorldId(): string;
+        private _drawFloorGrid;
         update(dt: number): void;
     }
 }
@@ -1905,30 +1893,161 @@ declare namespace leojs {
         protected m_xyzMaxEstimate: core.LVec3;
         protected m_xyzZeroPosition: core.LVec3;
         protected m_rpyZeroPosition: core.LVec3;
+        protected m_showEndEffector: boolean;
         protected m_visibility: boolean;
         constructor(world: RDHWorld);
-        protected abstract _buildDHrepresentation(): void;
-        protected abstract _computeMinMaxEstimates(): void;
+        init(): void;
+        release(): void;
         xyzMinEstimate(): core.LVec3;
         xyzMaxEstimate(): core.LVec3;
         xyzZeroPosition(): core.LVec3;
         rpyZeroPosition(): core.LVec3;
-        private _computeXYZzeroPosition();
-        protected abstract _computeEndEffectorOffset(): void;
-        private _buildModel();
-        private _buildJoint(type);
-        private _updateModel();
+        private _computeXYZzeroPosition;
+        private _buildModel;
+        private _buildJoint;
+        private _updateModel;
         forward(jointValues: number[]): core.LVec3;
+        /**
+        *    IK solver manipulator-specific implementation.
+        *    Implement inverse kinematics computation here
+        *
+        *    @method inverse
+        *    @param {core.LVec3} xyz requested position
+        *    @param {core.LVec3} rpy requested orientation
+        *
+        */
         abstract inverse(xyz: core.LVec3, rpy: core.LVec3): number[];
-        abstract isInWorkspace(xyz: core.LVec3): boolean;
-        abstract includeInvKinEndEffectorOrientation(): boolean;
+        /**
+        *    Initialize the end effector compensation matrix to take ...
+        *    into account the end effector orientation relative to the ...
+        *    manipulator's last DH joint frame
+        *
+        *    @method _computeEndEffectorOffset
+        */
+        protected abstract _computeEndEffectorOffset(): void;
+        /**
+        *    Define the DH-table here
+        *
+        *    @method _buildDHrepresentation
+        */
+        protected abstract _buildDHrepresentation(): void;
+        /**
+        *    Define the min-max estimates here, just as a hint ...
+        *    for the ranges for the UI controls
+        *
+        *    @method _computeMinMaxEstimates
+        */
+        protected abstract _computeMinMaxEstimates(): void;
+        /**
+        *    Robot specific method to check if roll-pitch-yaw is actually ...
+        *    used by the robot-specific IK solver. Used only by the UI to ...
+        *    create or not the RollPitchYaw controls
+        *
+        *    @method isInWorkspace
+        *    @param {core.LVec3} xyz position to be evaluated
+        */
+        includeInvKinEndEffectorOrientation(): boolean;
+        /**
+        *    Robot specific method to check if in workspace
+        *
+        *    @method isInWorkspace
+        *    @param {core.LVec3} xyz position to be evaluated
+        */
+        isInWorkspace(xyz: core.LVec3): boolean;
         update(dt: number): void;
         getDHtable(): RDHtable;
+        getWorld(): RDHWorld;
         getJointValueById(jointId: string): number;
         doesJointExist(jointId: string): boolean;
         getEndEffectorXYZ(): core.LVec3;
         getEndEffectorRPY(): core.LVec3;
         setModelVisibility(visible: boolean): void;
+    }
+}
+/// <reference path="../RDHmodel.d.ts" />
+declare namespace leojs {
+    class RDHrobot extends RDHmodel {
+        private m_userDHtable;
+        constructor(world: RDHWorld, userDHtable: {
+            [id: string]: any;
+        }[]);
+        protected _buildDHrepresentation(): void;
+        protected _computeEndEffectorOffset(): void;
+        protected _computeMinMaxEstimates(): void;
+        inverse(xyz: core.LVec3, rpy: core.LVec3): number[];
+        private _getDefaultJointMin;
+        private _getDefaultJointMax;
+    }
+}
+/// <reference path="../RDHmodel.d.ts" />
+declare namespace leojs {
+    class RDHmodelScara extends RDHmodel {
+        constructor(world: RDHWorld);
+        protected _buildDHrepresentation(): void;
+        includeInvKinEndEffectorOrientation(): boolean;
+        protected _computeEndEffectorOffset(): void;
+        protected _computeMinMaxEstimates(): void;
+        inverse(xyz: core.LVec3, rpy: core.LVec3): number[];
+        isInWorkspace(xyz: core.LVec3): boolean;
+    }
+}
+/// <reference path="../RDHmodel.d.ts" />
+declare namespace leojs {
+    class RDHmodelKukaKR210 extends RDHmodel {
+        private m_eeOffset;
+        private m_ikEEPosRef;
+        private m_ikWCPosRef;
+        private m_ikEErotMat;
+        private m_ikWCrotMat;
+        private m_ikEEtoWCrot;
+        private m_ikEEtoWCinvrot;
+        private m_R_0_3;
+        private m_R_0_3_inv;
+        private m_R_3_6;
+        constructor(world: RDHWorld);
+        protected _buildDHrepresentation(): void;
+        includeInvKinEndEffectorOrientation(): boolean;
+        protected _computeEndEffectorOffset(): void;
+        protected _computeMinMaxEstimates(): void;
+        inverse(xyz: core.LVec3, rpy: core.LVec3): number[];
+        isInWorkspace(xyz: core.LVec3): boolean;
+        update(dt: number): void;
+    }
+}
+/// <reference path="RDHWorld.d.ts" />
+/// <reference path="models/RDHmodelScara.d.ts" />
+/// <reference path="models/RDHmodelKukaKR210.d.ts" />
+declare namespace leojs {
+    enum RobotId {
+        SCARA = 0,
+        KUKA_KR210 = 1
+    }
+    class RDHWorldDemo extends RDHWorld {
+        private m_robotId;
+        constructor(appWidth: number, appHeight: number, robotId: RobotId);
+        init(): void;
+        private _initializeModel;
+        private _initializeUI;
+        private _initializeEnvironment;
+    }
+}
+/// <reference path="RDHWorld.d.ts" />
+declare namespace leojs {
+    class RDHWorldPlayground extends RDHWorld {
+        constructor(appWidth: number, appHeight: number);
+        reset(): void;
+        /**
+        *    Rebuild models in playground
+        *
+        *    @method rebuild
+        *    @param {Array<Dictionary>} userDHtable DH table
+        *    @param {string?} userURDFfileId urdfFile of the  manipulator. Empty for none
+        */
+        rebuild(userDHtable: {
+            [id: string]: any;
+        }[], userURDFfileId?: string): void;
+        private _buildModel;
+        private _buildUI;
     }
 }
 /// <reference path="ext/cat1js/LCommon.d.ts" />
@@ -1946,28 +2065,41 @@ declare namespace leojs {
 /// <reference path="RCommon.d.ts" />
 /// <reference path="worlds/RWorld.d.ts" />
 /// <reference path="entities/RTestEntity.d.ts" />
-/// <reference path="../robo/dh/RDHWorld.d.ts" />
+/// <reference path="../robo/dh/RDHWorldDemo.d.ts" />
+/// <reference path="../robo/dh/RDHWorldPlayground.d.ts" />
 declare namespace leojs {
-    class RApp {
+    abstract class RApp {
         static INSTANCE: RApp;
         protected m_gApp: core.LApplication;
         protected m_canvas: HTMLCanvasElement;
         protected m_gl: WebGLRenderingContext;
         protected m_world: RWorld;
         constructor(canvas: HTMLCanvasElement, glContext: WebGLRenderingContext);
-        protected _initializeGraphicsApp(): void;
+        initializeApp(): void;
         _onInit(): void;
         _onUpdate(dt: number): void;
         _onResize(appWidth: number, appHeight: number): void;
-        init(): void;
-        update(dt: number): void;
-        resizeApp(appWidth: number, appHeight: number): void;
-        private m_testEntity;
+        /**
+         * Initialize the world and scene here
+         */
+        protected abstract _init(): void;
+        protected _update(dt: number): void;
+        protected _resizeApp(appWidth: number, appHeight: number): void;
+        world(): RWorld;
     }
 }
-/// <reference path="ext/cat1js/Globals.d.ts" />
-/// <reference path="core/RApp.d.ts" />
-declare var rApp: leojs.RApp;
+/// <reference path="../../core/RApp.d.ts" />
+declare namespace leojs {
+    enum RDHApplicationMode {
+        DEMO = 0,
+        PLAYGROUND = 1
+    }
+    class RDHApp extends RApp {
+        private m_appMode;
+        constructor(canvas: HTMLCanvasElement, glContext: WebGLRenderingContext, appMode: RDHApplicationMode);
+        protected _init(): void;
+    }
+}
 declare namespace leojs {
     const EntryPointFiles: string[];
 }
@@ -1975,6 +2107,12 @@ declare namespace leojs {
 declare namespace leojs {
     class REntryPoint {
         static include(file: string): void;
-        private static begin();
+        private static begin;
     }
 }
+/// <reference path="ext/cat1js/Globals.d.ts" />
+/// <reference path="robo/dh/RDHApp.d.ts" />
+declare var rApp: leojs.RDHApp;
+/// <reference path="ext/cat1js/Globals.d.ts" />
+/// <reference path="robo/dh/RDHApp.d.ts" />
+declare var rApp: leojs.RDHApp;

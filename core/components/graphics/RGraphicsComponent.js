@@ -21,6 +21,17 @@ var leojs;
             _this.m_renderables = [];
             return _this;
         }
+        RGraphicsComponent.prototype.release = function () {
+            if (this.m_renderables) {
+                for (var q = 0; q < this.m_renderables.length; q++) {
+                    this.m_renderables[q].requestDeletion();
+                    this.m_renderables[q] = null;
+                    ;
+                }
+                this.m_renderables = null;
+            }
+            _super.prototype.release.call(this);
+        };
         RGraphicsComponent.prototype.renderables = function () { return this.m_renderables; };
         RGraphicsComponent.prototype.update = function (dt) {
             for (var _i = 0, _a = this.m_renderables; _i < _a.length; _i++) {

@@ -22,6 +22,12 @@ var engine3d;
             _this.shininess = shininess;
             return _this;
         }
+        LPhongMaterial.prototype.release = function () {
+            this.ambient = null;
+            this.diffuse = null;
+            this.specular = null;
+            _super.prototype.release.call(this);
+        };
         LPhongMaterial.staticType = function () { return 'phongMaterial3d'; };
         return LPhongMaterial;
     }(engine3d.LMaterial3d));

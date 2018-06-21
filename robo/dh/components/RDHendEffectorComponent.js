@@ -41,6 +41,17 @@ var leojs;
             _this._initializeEndEffector();
             return _this;
         }
+        RDHendEffectorComponent.prototype.release = function () {
+            this.m_effRootMesh = null;
+            this.m_effLeftMesh = null;
+            this.m_effRighttMesh = null;
+            this.m_transformBase = null;
+            this.m_leftGripTotalTransform = null;
+            this.m_rightGripTotalTransform = null;
+            this.m_leftGripTotalTransformToRoot = null;
+            this.m_rightGripTotalTransformToRoot = null;
+            _super.prototype.release.call(this);
+        };
         RDHendEffectorComponent.prototype._initializeEndEffector = function () {
             this.m_effRootMesh = leojs.buildPrimitive({ 'shape': 'box',
                 'width': leojs.EF_ROOT_SIZE * leojs.EF_BASE_DIM,
