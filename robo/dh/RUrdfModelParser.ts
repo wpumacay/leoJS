@@ -342,7 +342,7 @@ namespace leojs
             }
 
             if ( _jointTypeStr != RKinJointTypeFixed &&
-                 _jointTypeStr != RKinJointTYpePrismatic &&
+                 _jointTypeStr != RKinJointTypePrismatic &&
                  _jointTypeStr != RKinJointTypeRevolute )
             {
                 console.warn( 'RUrdfModelParser> joint with a not' + 

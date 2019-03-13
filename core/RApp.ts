@@ -78,12 +78,12 @@ namespace leojs
 
             // this.m_world = new RWorld( this.m_gApp.width(), this.m_gApp.height() );
 
-            // this.m_world = new RDHWorldDemo( this.m_gApp.width(), 
-            //                                  this.m_gApp.height(),
-            //                                  RobotId.KUKA_KR210 );
-
-            this.m_world = new RDHWorldPlayground( this.m_gApp.width(), 
-                                                   this.m_gApp.height() );
+            this.m_world = new RDHWorldDemo( this.m_gApp.width(), 
+                                             this.m_gApp.height(),
+                                             RobotId.KUKA_KR210 );
+                                             
+            // this.m_world = new RDHWorldPlayground( this.m_gApp.width(), 
+            //                                        this.m_gApp.height() );
 
             this.m_gApp.addScene( this.m_world.scene() );
 

@@ -25,6 +25,8 @@ namespace leojs
 
             this.m_robotId = robotId;
             this.m_worldId = 'DEMO';
+
+            this.init();
         }
 
         public init()

@@ -12,7 +12,7 @@ namespace leojs
 
     export const RKinJointTypeFixed : string     = 'fixed';
     export const RKinJointTypeRevolute : string  = 'revolute';
-    export const RKinJointTYpePrismatic : string = 'prismatic';
+    export const RKinJointTypePrismatic : string = 'prismatic';
 
     export class RKinNodeGeometry
     {
@@ -272,7 +272,7 @@ namespace leojs
                 core.LMat4.rotationAroundAxisInPlace( this.m_jointVariableTransform,
                                                       this.m_axis, this.m_jointValue );
             }
-            else if ( this.m_jointType == RKinJointTYpePrismatic )
+            else if ( this.m_jointType == RKinJointTypePrismatic )
             {
                 core.LMat4.translationAlongAxisInPlace( this.m_jointVariableTransform,
                                                         this.m_axis, this.m_jointValue );
